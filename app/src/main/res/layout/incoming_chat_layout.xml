@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <FrameLayout
+        android:id="@+id/incoming_layout_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:layout_marginEnd="@dimen/_60sdp"
+        android:layout_marginRight="@dimen/_60sdp"
+        android:background="@drawable/balloon_incoming_normal">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp">
+
+            <include layout="@layout/chat_time_view" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp"
+            android:visibility="visible">
+
+
+            <LinearLayout
+                android:id="@+id/messageLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/linkPreviewLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:visibility="gone">
+
+                    <include layout="@layout/link_preview_layout" />
+
+                </LinearLayout>
+
+                <include layout="@layout/chat_text_view" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/audioLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:visibility="gone">
+
+
+                <include layout="@layout/chat_audio_view" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/otherLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <include layout="@layout/chat_image_view" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/captionTV"
+                style="@style/chat_text_message_params"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_minus15sdp"
+                android:text="ffvvv"
+                android:textColor="@color/black_overlay"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:visibility="gone">
+
+            <include layout="@layout/progress_view" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/playButtonLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:visibility="gone">
+
+            <include layout="@layout/play_button_layout" />
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+</RelativeLayout>
+
+
+

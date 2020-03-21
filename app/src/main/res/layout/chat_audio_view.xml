@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/_150sdp"
+    android:background="@drawable/rectangle_filled_color">
+
+    <RelativeLayout
+        android:id="@+id/rlaudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingEnd="@dimen/_10sdp">
+
+
+        <RelativeLayout
+            android:id="@+id/img_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/_5sdp">
+
+            <ImageView
+                android:id="@+id/headsetIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_action_headset" />
+
+            <TextView
+                android:id="@+id/audioDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headsetIV"
+                android:layout_centerHorizontal="true"
+                android:text="00:00"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/audioPlayButton"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_toRightOf="@+id/img_layout"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_action_play_outline" />
+
+        <ImageView
+            android:id="@+id/audioPauseButton"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_toRightOf="@+id/img_layout"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_action_pause_outline" />
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

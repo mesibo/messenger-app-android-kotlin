@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/incoming_fragment_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".9"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/incoming_fragment_background"
+        android:background="@color/mesibo">
+
+
+        <TextView
+            android:id="@+id/tvVideCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/_15sdp"
+            android:textColor="@color/white"
+            android:text="Mesibo Audio Call"
+            android:layout_marginTop="@dimen/_2sdp"/>
+
+        <LinearLayout
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_15sdp">
+            <ImageView
+                android:id="@+id/photo_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:src="@drawable/profile" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_15sdp">
+
+
+            <TextView
+                android:id="@+id/incoming_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Rakesh Sharma"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Incoming Call"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                />
+
+            <TextView
+                android:id="@+id/incoming_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="+91 111111111"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/incoming_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="India"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.3"
+        android:visibility="gone"/>
+
+
+
+
+    <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.1"
+        android:orientation="vertical"
+        >
+
+
+
+
+
+        <ImageView
+            android:id="@+id/photo_image_down"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/profile"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:alpha="0.6"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.1"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            >
+
+         <!--   <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"/>-->
+
+            <LinearLayout
+                android:id="@+id/remind_me_layout"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!--                android:layout_marginLeft="@dimen/_25sdp"
+                -->
+                <ImageButton
+                    android:id="@+id/remind_me"
+                    android:layout_width="@dimen/incomming_call_icon"
+                    android:layout_height="@dimen/incomming_call_icon"
+                    android:scaleType="centerCrop"
+                    android:padding="@dimen/incomming_call_icon_inner_padding"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_alarm_white_36dp"
+                    android:layout_weight="1"/>
+                <!--                    android:layout_marginRight="@dimen/_3sdp"
+                -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Remind"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/outgoing_video_call_icon_text_size"/>
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="0.3">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                        android:id="@+id/message"
+                        android:layout_width="@dimen/incomming_call_icon"
+                        android:layout_height="@dimen/incomming_call_icon"
+                        android:scaleType="centerCrop"
+                        android:padding="@dimen/incomming_call_icon_inner_padding"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_message_white_36dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Message"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/outgoing_video_call_icon_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phone_locked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_30sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_weight="0.9"
+            android:background="@drawable/lefttorightslidebutton"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.mesibo.calls.ImageTouchSlider
+                android:id="@+id/slider"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_70sdp"
+                android:gravity="left" />
+
+            <include
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/image_touch_slider" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="  >>>Slide to Answer"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:id="@+id/swipe_to_button"
+                android:textSize="18sp"
+                android:background="@android:color/transparent"
+                />
+
+        </LinearLayout>
+
+        <!--<LinearLayout
+            android:id="@+id/phone_unlocked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible">
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/incoming_call_disconnect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/incomming_call_icon"
+                    android:layout_gravity="center"
+                    android:background="@drawable/roundedbutton"
+                    android:padding="@dimen/incomming_call_icon_inner_padding"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_call_end_white_36dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Decline"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/outgoing_video_call_icon_text_size" />
+            </LinearLayout>
+            <android.support.v4.widget.Space
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="wrap_content"
+               />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+               >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                        android:id="@+id/incoming_call_connect"
+                        android:layout_width="@dimen/incomming_call_icon"
+                        android:layout_height="@dimen/incomming_call_icon"
+                        android:layout_gravity="right"
+                        android:scaleType="centerCrop"
+                        android:padding="@dimen/incomming_call_icon_inner_padding"
+                        android:background="@drawable/acceptroundedbutton"
+                        android:src="@drawable/ic_call_white_36dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Accept"
+                        android:textSize="@dimen/outgoing_video_call_icon_text_size"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>-->
+
+
+        <LinearLayout
+            android:id="@+id/phone_unlocked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_weight="0.8"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:visibility="visible">
+            <!--<android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"/>-->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_180sdp"
+                android:gravity="bottom"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/decline_up_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/_25sdp"
+                    android:alpha="0.3"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/two_arrows_pointing_up"
+                        />
+                    <ImageView
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/two_arrows_pointing_up"
+                        android:layout_marginTop="@dimen/_minus3sdp"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/decline_view_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" >
+
+                    <ImageView
+                        android:layout_width="@dimen/incomming_video_call_icon"
+                        android:layout_height="@dimen/incomming_video_call_icon"
+                        android:src="@drawable/fade_black_button"
+                        android:layout_centerInParent="true"
+                        />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/ic_call_end_white_36dp"
+                        android:tint="@color/red"/>
+
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/decline_swipe_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Swipe up to decline"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+
+            <!-- <android.support.v4.widget.Space
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"/>-->
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_220sdp">
+
+                    <LinearLayout
+                        android:id="@+id/accept_up_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:alpha="0.3"
+                        android:layout_marginBottom="@dimen/_25sdp">
+
+                        <ImageView
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/two_arrows_pointing_up"
+                            />
+                        <ImageView
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/two_arrows_pointing_up"
+                            android:layout_marginTop="@dimen/_minus3sdp"/>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/accept_view_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" >
+
+                        <ImageView
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_60sdp"
+                            android:src="@drawable/round_background_mesibo_color"
+                            android:layout_centerInParent="true"
+                            />
+
+
+                        <ImageView
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:layout_centerInParent="true"
+                            app:srcCompat="@drawable/ic_action_audiocall"
+                            android:tint="@color/white" />
+
+
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/accept_swipe_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Swipe up to accept"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/_10sdp"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/incoming_audio_accept_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_180sdp">
+
+
+                    <LinearLayout
+                        android:id="@+id/message_up_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:alpha="0.3"
+                        android:layout_marginBottom="@dimen/_25sdp"
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/two_arrows_pointing_up"
+                            />
+                        <ImageView
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/two_arrows_pointing_up"
+                            android:layout_marginTop="@dimen/_minus3sdp"/>
+
+                    </LinearLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/custom_message_view_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" >
+
+                        <ImageView
+                            android:layout_width="@dimen/incomming_video_call_icon"
+                            android:layout_height="@dimen/incomming_video_call_icon"
+                            android:src="@drawable/fade_black_button"
+                            android:layout_centerInParent="true"
+                            />
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8"
+                            app:srcCompat="@drawable/ic_message_white_36dp"
+                            android:tint="@color/white" />
+
+
+
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:id="@+id/message_swipe_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Swipe up to message"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

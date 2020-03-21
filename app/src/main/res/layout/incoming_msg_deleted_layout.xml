@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+
+
+
+    <FrameLayout
+        android:id="@+id/incoming_layout_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:background="@drawable/balloon_incoming_normal">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:orientation="horizontal"
+            android:paddingRight="5dp">
+
+
+
+
+            <TextView
+                android:id="@+id/textview_time"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="5dp"
+                android:text="11:15 PM"
+                style="@style/chat_timings_params"
+                android:layout_gravity="bottom|right"/>
+
+
+        </LinearLayout>
+
+
+
+
+        <TextView
+            android:id="@+id/textview_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_15sdp"
+            android:paddingRight="@dimen/_15sdp"
+            android:paddingTop="@dimen/_1sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:textSize="@dimen/_15sdp"
+
+            android:textColor="@color/grey"
+            android:autoLink="web"
+            android:text="This message was deleted."
+
+            android:visibility="visible"/>
+
+
+    </FrameLayout>
+
+</RelativeLayout>

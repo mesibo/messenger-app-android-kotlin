@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_gravity="center"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/faded_blue"
+        app:cardCornerRadius="@dimen/_5sdp"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/missedCallLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_5sdp"
+            android:visibility="gone">
+
+
+
+            <ImageView
+                android:id="@+id/missedCallImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_callmissed"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:tint="@color/red"
+                android:layout_marginRight="@dimen/_5sdp" />
+
+
+            <TextView
+                android:id="@+id/callTypeMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/myTextPrimaryColor"
+                android:text="Missed call at"
+                android:textSize="@dimen/_10sdp"/>
+
+            <TextView
+                android:id="@+id/missedcallTS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/myTextPrimaryColor"
+                android:text="10:34"
+               android:textSize="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_5sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/customeMessageLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_5sdp">
+
+
+
+            <TextView
+                android:id="@+id/customeMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/myTextPrimaryColor"
+                android:text="dgsgf gdsgsfg"
+                android:padding="@dimen/_5sdp"
+                android:textSize="@dimen/_10sdp"/>
+
+
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

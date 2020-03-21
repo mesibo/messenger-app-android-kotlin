@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="@dimen/_10sdp"
+    android:layout_marginStart="@dimen/_15sdp"
+    android:layout_marginEnd="@dimen/_15sdp">
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Message?"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/myTextPrimaryColor"/>
+
+    <TextView
+        android:id="@+id/deleteForMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE FOR ME"
+        android:layout_gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/cancelDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CANCEL"
+        android:layout_gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+            android:id="@+id/deleteForEveryone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE FOR EVERYONE"
+        android:layout_gravity="end"
+        android:textAlignment="textEnd"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/colorPrimary"/>
+
+</LinearLayout>

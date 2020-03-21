@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/menu_reply"
+        android:icon="@drawable/ic_reply_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        android:title="Reply" />
+
+    <item
+        android:id="@+id/menu_star"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        android:title="Star" />
+
+    <item
+        android:id="@+id/menu_resend"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        android:title="Resend" />
+
+    <item
+        android:id="@+id/menu_remove"
+        android:icon="@drawable/ic_delete_white_24dp"
+        app:showAsAction="always"
+        android:orderInCategory="0"
+        android:title="Delete" />
+    <item
+        android:id="@+id/menu_copy"
+        android:icon="@drawable/ic_content_copy_white_24dp"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        android:title="Copy" />
+
+    <item
+        android:id="@+id/menu_share"
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="always"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/menu_forward"
+        android:icon="@drawable/ic_forward_white_24dp"
+        android:orderInCategory="0"
+        android:title="Forward"
+        app:showAsAction="always"
+        />
+
+
+
+</menu>
