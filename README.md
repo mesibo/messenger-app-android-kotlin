@@ -1,7 +1,8 @@
-## Mesibo Messenger for Android - Kotlin Beta
+## Mesibo Messenger for Android - Kotlin (Beta)
 Note: 
 - This is a beta version - visit here for production version (older) code [https://github.com/mesibo/messenger-app-android](https://github.com/mesibo/messenger-app-android)
 - This kotlin version is created by converting java code using Android Studio
+- If this is the first time you are using kotlin in your project, Android Studio might display a warning that Kotlin is not configured in the project. Configure Kotlin by clicking Configure either in the upper right corner of the editor or in the event log alert that pops up in the lower-right corner. Refer to the official documentation [here](https://developer.android.com/kotlin/add-kotlin#add)
 
 Mesibo Messenger is an open-source app with real-time messaging, voice and video call features. This repo contains the source code for Mesibo Messenger App for Android. The GitHub repository for iOS version is [here](https://github.com/mesibo/messenger-app-ios).
 
@@ -68,7 +69,6 @@ These apps use following [Mesibo SDKs](https://mesibo.com).
 
 These apps also use following third party libraries/services.
 
-- [Facebook AccountKit](https://www.accountkit.com/) for the Phone Verification
 - [Google Maps](https://developers.google.com/maps/documentation/) and [Google Places](https://cloud.google.com/maps-platform/places/) SDKs for Geolocation integration 
 
 ## Documentation & Tutorials
