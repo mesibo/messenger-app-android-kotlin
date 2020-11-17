@@ -90,7 +90,7 @@ object SampleAPI {
     private val DEFAULT_FILE_URL = "https://media.mesibo.com/files/"
 
     private val mGson = Gson()
-    private val mApiUrl = "https://app.mesibo.com/api.php"
+    private val mApiUrl = "https://app.mesibo.com/messenger/api.php"
     private var mContactTs: Long = 0
 
     //MUST not happen
