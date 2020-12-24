@@ -13,34 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mesibo.messenger.fcm
-
 
 import com.google.firebase.messaging.FirebaseMessagingService
 
 class MesiboInstanceIDListenerService : FirebaseMessagingService() {
-
     /**
      * Called if InstanceID token is updated. This may occur if the security of
      * the previous token had been compromised. This call is initiated by the
      * InstanceID provider.
      */
-    //    @Override
-    //    public void onTokenRefresh() {
-    //        // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-    //        MesiboRegistrationIntentService.startRegistration(this, null, null);
-    //    }
-
-    override fun onNewToken(s: String?) {
+    override fun onNewToken(s: String) {
         super.onNewToken(s)
         ///  Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-        MesiboRegistrationIntentService.startRegistration(this, "", null)
+        MesiboRegistrationIntentService.startRegistration(this, null, null)
     }
 
     companion object {
-
-        private val TAG = "MyInstanceIDLS"
+        private const val TAG = "MyInstanceIDLS"
     }
-
 }

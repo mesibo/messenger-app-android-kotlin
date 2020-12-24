@@ -10,13 +10,16 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        >
 
         <ImageView
             android:id="@+id/mp_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            />
 
         <ImageView
             android:id="@+id/video_layer"
@@ -25,7 +28,8 @@
             android:src="@drawable/ic_play_circle_outline_black_36dp"
             android:tint="@android:color/white"
             android:scaleType="center"
-            android:background="@color/black_overlay"/>
+            android:background="@color/black_overlay"
+            />
 
 
     </RelativeLayout>

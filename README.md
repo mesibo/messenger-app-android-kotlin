@@ -1,4 +1,4 @@
-## Mesibo Messenger for Android - Kotlin (Beta)
+## Mesibo Messenger for Android - Kotlin 
 Note: 
 - This is a beta version - visit here for production version (older) code [https://github.com/mesibo/messenger-app-android](https://github.com/mesibo/messenger-app-android)
 - This kotlin version is created by converting java code using Android Studio

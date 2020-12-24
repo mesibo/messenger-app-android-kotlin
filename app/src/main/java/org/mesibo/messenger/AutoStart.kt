@@ -1,5 +1,10 @@
 package org.mesibo.messenger
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import org.mesibo.messenger.MainApplication.Companion.restartIntent
+
 /** Copyright (c) 2019 Mesibo
  * https://mesibo.com
  * All rights reserved.
@@ -36,18 +41,13 @@ package org.mesibo.messenger
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-
 class AutoStart : BroadcastReceiver() {
     //Alarm alarm = new Alarm();
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED || intent.action == MainApplication.restartIntent) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED || intent.action == restartIntent) {
             StartUpActivity.newInstance(context, true)
         }
     }

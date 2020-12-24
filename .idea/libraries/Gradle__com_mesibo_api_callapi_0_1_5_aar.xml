@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mesibo.api:callapi:0.1.5@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0bcd7373ca6692762420dcc6c671358a/callapi-0.1.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0bcd7373ca6692762420dcc6c671358a/callapi-0.1.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0bcd7373ca6692762420dcc6c671358a/callapi-0.1.5/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/callapi/0.1.5/d3d0dc26aa41fcb2653975952cd23dc7017bb463/callapi-0.1.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/callapi/0.1.5/9717c8c1a3903df6e2316c4708bd0a02bd098e3f/callapi-0.1.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

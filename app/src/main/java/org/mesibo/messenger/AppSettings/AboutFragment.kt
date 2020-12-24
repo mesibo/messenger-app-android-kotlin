@@ -34,7 +34,7 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
 package org.mesibo.messenger.AppSettings
@@ -46,34 +46,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import org.mesibo.messenger.BuildConfig
-
 import org.mesibo.messenger.R
 
-class AboutFragment : Fragment() {
 
+class AboutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
-
-        val v = inflater.inflate(R.layout.about, container, false)
-
-        val tx = v.findViewById<View>(R.id.mesibologo) as TextView
-
-        val mesiboFont = Typeface.createFromAsset(activity!!.assets, "fonts/mesibo_regular.otf")
-
-        if (null != mesiboFont)
-            tx.typeface = mesiboFont
-
-        val version = v.findViewById<View>(R.id.version) as TextView
-        val buildDate = v.findViewById<View>(R.id.builddate) as TextView
-
-        version.text = "Version: " + BuildConfig.BUILD_VERSION
-        buildDate.text = "Build Time: " + BuildConfig.BUILD_TIMESTAMP
-
+        val v: View = inflater.inflate(R.layout.about, container, false)
+        val tx: TextView = v.findViewById<View>(R.id.mesibologo) as TextView
+        val mesiboFont: Typeface = Typeface.createFromAsset(activity!!.assets, "fonts/mesibo_regular.otf")
+        if (null != mesiboFont) tx.setTypeface(mesiboFont)
+        val version: TextView = v.findViewById<View>(R.id.version) as TextView
+        val buildDate: TextView = v.findViewById<View>(R.id.builddate) as TextView
+        version.setText("Version: " + BuildConfig.BUILD_VERSION)
+        buildDate.setText("Build Time: " + BuildConfig.BUILD_TIMESTAMP)
         return v
     }
-
 }

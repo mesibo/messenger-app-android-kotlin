@@ -34,86 +34,78 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
-
 
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.widget.TextView
-
 import com.mesibo.api.Mesibo
+import com.mesibo.api.Mesibo.FileTransferListener
+import com.mesibo.api.Mesibo.UserProfile
+import com.mesibo.api.Mesibo.UserProfileUpdateListener
+import org.mesibo.messenger.R
 
-class ShowProfileActivity : AppCompatActivity(), ShowProfileFragment.OnFragmentInteractionListener, Mesibo.FileTransferListener, Mesibo.UserProfileUpdateListener {
-
-    internal lateinit var mUsermageView: SquareImageView
-    internal var mUserProfile: Mesibo.UserProfile? = null
-    internal lateinit var mToolbar: Toolbar
-    internal lateinit var mAppBarLayout: AppBarLayout
-    internal lateinit var mCoordinatorLayout: CoordinatorLayout
-    internal var mGroupId: Long = 0
-    internal var mPeer: String? = null
+class ShowProfileActivity : AppCompatActivity(), ShowProfileFragment.OnFragmentInteractionListener, FileTransferListener, UserProfileUpdateListener {
+    var mUsermageView: SquareImageView? = null
+    var mUserProfile: UserProfile? = null
+    var mToolbar: Toolbar? = null
+    var mAppBarLayout: AppBarLayout? = null
+    var mCoordinatorLayout: CoordinatorLayout? = null
+    var mGroupId: Long = 0
+    var mPeer: String? = null
     private var mProfilePicturePath: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_user_profile)
         mToolbar = findViewById<View>(R.id.up_toolbar) as Toolbar
         setSupportActionBar(mToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
         val args = intent.extras ?: return
-
         mPeer = args.getString("peer")
         mGroupId = args.getLong("groupid")
-
         mUserProfile = null
-
-        if (mGroupId > 0) {
-            mUserProfile = Mesibo.getUserProfile(mGroupId)
+        mUserProfile = if (mGroupId > 0) {
+            Mesibo.getUserProfile(mGroupId)
         } else {
-            mUserProfile = Mesibo.getUserProfile(mPeer)
+            Mesibo.getUserProfile(mPeer)
         }
         mUsermageView = findViewById<View>(R.id.up_image_profile) as SquareImageView
-
         Mesibo.addListener(this)
-
-        mUsermageView.setOnClickListener { UIManager.launchImageViewer(this@ShowProfileActivity, mProfilePicturePath!!) }
-
+        mUsermageView!!.setOnClickListener { UIManager.launchImageViewer(this@ShowProfileActivity, mProfilePicturePath) }
         val userName = findViewById<View>(R.id.up_user_name) as TextView
         val userstatus = findViewById<View>(R.id.up_current_status) as TextView
-
-        userName.text = mUserProfile!!.name
-        var lastSeen = Mesibo.getTimestamp() - mUserProfile!!.lastActiveTime
+        userName.text = mUserProfile?.name
+        var lastSeen = Mesibo.getTimestamp() - mUserProfile?.lastActiveTime!!
         userstatus.visibility = View.VISIBLE
         if (lastSeen <= 60000) {
             userstatus.text = "Online"
         } else {
             var seenStatus = ""
             lastSeen = lastSeen / 60000 //miutes
-            if (mUserProfile!!.groupid > 0 || 0L == mUserProfile!!.lastActiveTime) {
+            if (mUserProfile!!.groupid!! > 0 || 0L == mUserProfile?.lastActiveTime) {
                 userstatus.visibility = View.GONE
             } else if (lastSeen >= 2 * 24 * 60) {
-                seenStatus = (lastSeen / (24 * 60)).toInt().toString() + " days ago"
+                ((lastSeen / (24 * 60)).toString() +" days ago").also { seenStatus = it }
             } else if (lastSeen >= 24 * 60) {
                 seenStatus = "yesterday"
             } else if (lastSeen >= 120) {
-                seenStatus = (lastSeen / 60).toInt().toString() + " hours ago"
+                seenStatus = (lastSeen / 60).toString()+" hours ago"
             } else if (lastSeen >= 60) {
                 seenStatus = "an hour ago"
             } else if (lastSeen >= 2) {
@@ -121,90 +113,69 @@ class ShowProfileActivity : AppCompatActivity(), ShowProfileFragment.OnFragmentI
             } else {
                 seenStatus = "a few moments before"
             }
-
             userstatus.text = "Last seen $seenStatus"
 
             //userstatus.setVisibility(View.GONE);
         }
-
         val collapsingToolbar = findViewById<CollapsingToolbarLayout>(R.id.up_collapsing_toolbar)
         collapsingToolbar.title = "  "
         mCoordinatorLayout = findViewById(R.id.up_profile_root)
         mAppBarLayout = findViewById(R.id.up_appbar)
-        mAppBarLayout.post { setAppBarOffset(-250) }
-
-        mAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            //measuring for alpha
+        mAppBarLayout!!.post(Runnable { setAppBarOffset(-250) })
+        mAppBarLayout!!.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset -> //measuring for alpha
             var Alpha = (appBarLayout.totalScrollRange - Math.abs(verticalOffset)).toFloat() / appBarLayout.totalScrollRange
-            if (Alpha > 0.4)
-                Alpha = 1f
-            else {
-                Alpha = Alpha + 0.6.toFloat()
+            Alpha = if (Alpha > 0.4) 1f else {
+                Alpha + 0.6.toFloat()
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                mUsermageView.alpha = Alpha
-            else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) mUsermageView!!.alpha = Alpha else {
                 val alpha = AlphaAnimation(Alpha, Alpha)
                 alpha.duration = 0
                 alpha.fillAfter = true
-                mUsermageView.startAnimation(alpha)
+                mUsermageView!!.startAnimation(alpha)
             }
         })
-
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        val showUserProfileDetailsFragment = ShowProfileFragment.newInstance(mUserProfile!!)
+        val showUserProfileDetailsFragment = ShowProfileFragment.newInstance(mUserProfile)
         fragmentTransaction.add(R.id.up_fragment, showUserProfileDetailsFragment, "up")
         fragmentTransaction.commit()
     }
 
     private fun setAppBarOffset(offsetPx: Int) {
-        val params = mAppBarLayout.layoutParams as CoordinatorLayout.LayoutParams
+        val params = mAppBarLayout!!.layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior as AppBarLayout.Behavior?
-        behavior!!.topAndBottomOffset = -60 - mAppBarLayout.totalScrollRange / 2
+        behavior!!.topAndBottomOffset = -60 - mAppBarLayout!!.totalScrollRange / 2
         //behavior.onNestedPreScroll(mCoordinatorLayout, mAppBarLayout, null, 0, offsetPx, new int[]{0, 0});
     }
 
     private fun setUserPicture() {
         mProfilePicturePath = Mesibo.getUserProfilePicturePath(mUserProfile, Mesibo.FileInfo.TYPE_AUTO)
-        if (null == mProfilePicturePath || !Mesibo.fileExists(mProfilePicturePath))
-            return
-
+        if (null == mProfilePicturePath || !Mesibo.fileExists(mProfilePicturePath)) return
         val b = BitmapFactory.decodeFile(mProfilePicturePath)
         if (null != b) {
-            mUsermageView.setImageBitmap(b)
+            mUsermageView!!.setImageBitmap(b)
         }
     }
 
-    override fun Mesibo_onUserProfileUpdated(userProfile: Mesibo.UserProfile, i: Int, refresh: Boolean) {
-        if (!refresh)
-            return
-
-        if (userProfile !== mUserProfile)
-            return
-
+    override fun Mesibo_onUserProfileUpdated(userProfile: UserProfile, i: Int, refresh: Boolean) {
+        if (!refresh) return
+        if (userProfile !== mUserProfile) return
         if (Mesibo.isUiThread()) {
             setUserPicture()
             Mesibo.startUserProfilePictureTransfer(mUserProfile, this)
             return
         }
-
         Handler(Looper.getMainLooper()).post {
             setUserPicture()
             Mesibo.startUserProfilePictureTransfer(mUserProfile, this@ShowProfileActivity)
         }
-
-
     }
 
     /**
      * @param file
      */
     override fun Mesibo_onFileTransferProgress(file: Mesibo.FileInfo): Boolean {
-
-        if (100 == file.progress)
-            setUserPicture()
-
+        if (100 == file.progress) setUserPicture()
         return true
     }
 
@@ -213,27 +184,19 @@ class ShowProfileActivity : AppCompatActivity(), ShowProfileFragment.OnFragmentI
         return true
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
-
-    }
-
+    override fun onFragmentInteraction(uri: Uri?) {}
     public override fun onResume() {
         super.onResume()
-
         if (!Mesibo.setAppInForeground(this, 0x102, true)) {
             finish()
             return
         }
-
-        if (mUserProfile!!.groupid > 0) {
+        if (mUserProfile?.groupid!! > 0) {
             val userName = findViewById<View>(R.id.up_user_name) as TextView
-            if (null != mUserProfile!!.name)
-                userName.text = mUserProfile!!.name
+            if (null != mUserProfile?.name) userName.text = mUserProfile?.name
         }
-
         setUserPicture()
         Mesibo.startUserProfilePictureTransfer(mUserProfile, this)
-
     }
 
     override fun onPause() {
@@ -246,12 +209,10 @@ class ShowProfileActivity : AppCompatActivity(), ShowProfileFragment.OnFragmentI
         Mesibo.setAppInForeground(this, 0x102, false)
     }
 
-
     override fun finish() {
         super.finish()
         overridePendingTransition(0, 0)
     }
-
 
     public override fun onStart() {
         super.onStart()

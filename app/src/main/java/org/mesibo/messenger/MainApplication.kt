@@ -34,50 +34,34 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
 import android.app.Application
 import android.content.Context
 import android.util.Log
-
 import com.mesibo.api.Mesibo
-
+import com.mesibo.api.Mesibo.RestartListener
+import com.mesibo.calls.ui.MesiboCallUi
 import com.mesibo.mediapicker.MediaPicker
-import com.mesibo.calls.MesiboCall
 import com.mesibo.messaging.MesiboUI
+import org.mesibo.messenger.SampleAPI.init
 
-/**
- * Created by Mesibo on 29/09/17.
- */
-
-class MainApplication : Application(), Mesibo.RestartListener {
-
-
+class MainApplication : Application(), RestartListener {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
         Mesibo.setRestartListener(this)
         mConfig = AppConfig(this)
-        SampleAPI.init(applicationContext)
-
-        mCall = MesiboCall.getInstance()
+        init(applicationContext)
+        mCall = MesiboCallUi.getInstance()
         mCall!!.init(this)
-
-
-        val mesiboCallConfig = mCall!!.config
-        mesiboCallConfig.backgroundColor = -0xff7975
-
-
         val opt = MesiboUI.getConfig()
         opt.mToolbarColor = -0xff7975
         opt.emptyUserListMessage = "Ask your family and friends to download so that you can try out Mesibo functionalities"
         MediaPicker.setToolbarColor(opt.mToolbarColor)
-
-
     }
 
     override fun Mesibo_onRestart() {
@@ -86,15 +70,22 @@ class MainApplication : Application(), Mesibo.RestartListener {
     }
 
     companion object {
-        val TAG = "MesiboSampleApplication"
+        private var instance: MainApplication? = null
+
+        @JvmName("getAppContext1")
+        fun getAppContext(): Context? {
+            if(instance == null)
+                return null
+
+            return instance!!.applicationContext
+        }
+
+        const val TAG = "MesiboSampleApplication"
         var appContext: Context? = null
             private set
-        private var mCall: MesiboCall? = null
+        private var mCall: MesiboCallUi? = null
         private var mConfig: AppConfig? = null
-
         val restartIntent: String
             get() = "com.mesibo.sampleapp.restart"
     }
-
 }
-

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mesibo.api:callui:0.0.14@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/58f94ba84e66a810e41e9741748a3f9c/callui-0.0.14/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/58f94ba84e66a810e41e9741748a3f9c/callui-0.0.14/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/58f94ba84e66a810e41e9741748a3f9c/callui-0.0.14/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/callui/0.0.14/2f41156d7a5001fc85bdd016dc1422913cd35e5b/callui-0.0.14-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/callui/0.0.14/1433a973d55e50f083263ea6d6a1734aabaf2a83/callui-0.0.14-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

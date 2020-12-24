@@ -1,5 +1,13 @@
 package org.mesibo.messenger
 
+import android.app.backup.BackupManager
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
+import android.util.Log
+import com.google.gson.Gson
+import org.mesibo.messenger.SampleAPI.Invite
+
 /** Copyright (c) 2019 Mesibo
  * https://mesibo.com
  * All rights reserved.
@@ -36,33 +44,23 @@ package org.mesibo.messenger
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
-import com.google.gson.Gson
-
-import android.app.backup.BackupManager
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
-
-class AppConfig(private val mContext: Context) {
-
-    private var firstTime = false
-    internal var mSharedPref: SharedPreferences? = null
-
-    val isFirstTime: Boolean?
-        get() = firstTime
-
+class AppConfig(c: Context) {
     class Configuration {
+        @JvmField
         var token = ""
+        @JvmField
         var phone = ""
+        @JvmField
         var cc = ""
-        var invite: SampleAPI.Invite? = null
+        @JvmField
+        var invite: Invite? = null
+        @JvmField
         var uploadurl: String? = null
+        @JvmField
         var downloadurl: String? = null
-
         fun reset() {
             token = ""
             phone = ""
@@ -73,249 +71,147 @@ class AppConfig(private val mContext: Context) {
         }
     }
 
-    init {
-        instance = this
-        bm = BackupManager(mContext)
-        mSharedPref = mContext.getSharedPreferences(sharedPrefKey, Context.MODE_PRIVATE)
-        firstTime = false
-        if (!mSharedPref!!.contains(systemPreferenceKey)) {
-            Log.d(TAG, "First time Launch")
-            firstTime = true
-        }
-
-        if(!firstTime){
-            Log.d(TAG, "Loading from Shared Preferences")
-        }
-
-        getAppSetting()
-
-        if (firstTime)
-            saveSettings()
-    }
-
+    var isFirstTime = false
+    private val mContext: Context
+    var mSharedPref: SharedPreferences? = null
     private fun backup() {
         bm!!.dataChanged()
     }
 
     // We could use TAG also - to save/retrieve settings
-    fun getAppSetting() {
-        val gson = Gson()
-        var json = mSharedPref?.getString(systemPreferenceKey, "")
-        Log.d("MesiboKotlin", "================> SHARED PREFERENCES"+json.toString())
-
-        /**Fix**/
-        if(!json!!.isEmpty() && json.toString().length!=0)
+    val appSetting: Unit
+        get() {
+            val gson = Gson()
+            val json = mSharedPref!!.getString(systemPreferenceKey, "")
             config = gson.fromJson(json, Configuration::class.java)
+            if (null == config) config = Configuration()
+        }
 
-        if (null == config)
-            config = Configuration()
-    }
-
-    private fun putAppSetting(spe: SharedPreferences.Editor) {
+    private fun putAppSetting(spe: Editor) {
         val gson = Gson()
-
         val json = gson.toJson(config)
         spe.putString(systemPreferenceKey, json)
         spe.commit()
     }
 
-
     fun saveSettings(): Boolean {
         Log.d(TAG, "Updating RMS .. ")
-        try {
-            mSharedPref?.let {
-                synchronized(it){
-                    val spe = mSharedPref!!.edit()
-                    putAppSetting(spe)
-                    backup()
-                    return true
-                }
+        return try {
+            synchronized(mSharedPref!!) {
+                val spe = mSharedPref!!.edit()
+                putAppSetting(spe)
+                backup()
+                return true
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to updateRMS(): " + e.message)
-            return false
+            false
         }
 
-        return false;
+        //return false;
     }
 
-    fun setStringValue(key: String, value: String): Boolean {
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                    val poEditor = mSharedPref!!.edit()
-                    poEditor.putString(key, value)
-                    poEditor.commit()
-                    //backup();
-                    return true
-                }
+    fun setStringValue(key: String?, value: String?): Boolean {
+        return try {
+            synchronized(mSharedPref!!) {
+                val poEditor = mSharedPref!!.edit()
+                poEditor.putString(key, value)
+                poEditor.commit()
+                //backup();
+                return true
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to set long value in RMS:" + e.message)
-            return false
+            false
         }
-        return false
     }
 
-    fun getStringValue(key: String, defaultVal: String): String? {
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                                                                                                                                return if (mSharedPref!!.contains(key)) mSharedPref!!.getString(key, defaultVal) else defaultVal
-                }
+    fun getStringValue(key: String?, defaultVal: String): String {
+        return try {
+            synchronized(mSharedPref!!) {
+                return if (mSharedPref!!.contains(key)) mSharedPref!!.getString(key, defaultVal) else defaultVal
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to fet long value in RMS:" + e.message)
-            return defaultVal
+            defaultVal
         }
-
-        return defaultVal
-
     }
 
-    fun setLongValue(key: String, value: Long): Boolean {
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                    val poEditor = mSharedPref!!.edit()
-                    poEditor.putLong(key, value)
-                    poEditor.commit()
-                    return true
-                }
+    fun setLongValue(key: String?, value: Long): Boolean {
+        return try {
+            synchronized(mSharedPref!!) {
+                val poEditor = mSharedPref!!.edit()
+                poEditor.putLong(key, value)
+                poEditor.commit()
+                return true
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to set long value in RMS:" + e.message)
-            return false
+            false
         }
-
-        return false
     }
 
-    fun getLongValue(key: String, defaultVal: Long): Long {
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                    return if (mSharedPref!!.contains(key)) mSharedPref!!.getLong(key, defaultVal) else defaultVal
-                }
+    fun getLongValue(key: String?, defaultVal: Long): Long {
+        return try {
+            synchronized(mSharedPref!!) {
+                return if (mSharedPref!!.contains(key)) mSharedPref!!.getLong(key, defaultVal) else defaultVal
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to fet long value in RMS:" + e.message)
-            return defaultVal
+            defaultVal
         }
-
-        return defaultVal
     }
 
-    fun setIntValue(key: String, value: Int): Boolean {
-        try {
-            mSharedPref?.let {
-                synchronized (it) {
-                    val poEditor = mSharedPref!!.edit()
-                    poEditor.putInt(key, value)
-                    poEditor.commit()
-                    return true
-                }
+    fun setIntValue(key: String?, value: Int): Boolean {
+        return try {
+            synchronized(mSharedPref!!) {
+                val poEditor = mSharedPref!!.edit()
+                poEditor.putInt(key, value)
+                poEditor.commit()
+                return true
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to set int value in RMS:" + e.message)
-            return false
+            false
         }
-
-        return false
     }
 
-    fun getIntValue(key: String, defaultVal: Int): Int {
-
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                    return if (mSharedPref!!.contains(key)) mSharedPref!!.getInt(key, defaultVal) else defaultVal
-                }
+    fun getIntValue(key: String?, defaultVal: Int): Int {
+        return try {
+            synchronized(mSharedPref!!) {
+                return if (mSharedPref!!.contains(key)) mSharedPref!!.getInt(key, defaultVal) else defaultVal
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to get int value in RMS:" + e.message)
-            return defaultVal
+            defaultVal
         }
-
-        return defaultVal
     }
 
-    fun setBooleanValue(key: String, value: Boolean?): Boolean {
-        try {
-            mSharedPref?.let {
-                synchronized (it){
-                    val poEditor = mSharedPref!!.edit()
-                    poEditor.putBoolean(key, value!!)
-                    poEditor.commit()
-                    return true
-                }
+    fun setBooleanValue(key: String?, value: Boolean?): Boolean {
+        return try {
+            synchronized(mSharedPref!!) {
+                val poEditor = mSharedPref!!.edit()
+                poEditor.putBoolean(key, value!!)
+                poEditor.commit()
+                return true
             }
         } catch (e: Exception) {
             Log.d(TAG, "Unable to set long value in RMS:" + e.message)
-            return false
+            false
         }
-
-        return false
     }
 
-    fun getBooleanValue(key: String, defaultVal: Boolean?): Boolean? {
+    fun getBooleanValue(key: String, defaultVal: Boolean): Boolean {
         Log.d(TAG, "Getting long value for $key in RMS directly")
-        try {
-            mSharedPref?.let {
-                synchronized (it) {
-                    return if (mSharedPref!!.contains(key)) mSharedPref!!.getBoolean(key, defaultVal!!) else defaultVal
-                }
+        return try {
+            synchronized(mSharedPref!!) {
+                return if (mSharedPref!!.contains(key)) mSharedPref!!.getBoolean(key, defaultVal) else defaultVal
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Unable to get long value in RMS:" + e.message)
-            return defaultVal
+            Log.d(TAG, "Unable to fet long value in RMS:" + e.message)
+            defaultVal
         }
-
-        return defaultVal
-    }
-
-    companion object {
-        private val TAG = "AppSettings"
-        val sharedPrefKey = "org.mesibo.messenger.kotlin"
-        private val systemPreferenceKey = "settings"
-
-        val MESSAGECONTEXTACTION_FORWARD = 1
-        val MESSAGECONTEXTACTION_REPLY = 2
-        val MESSAGECONTEXTACTION_RESEND = 3
-        val MESSAGECONTEXTACTION_DELETE = 4
-        val MESSAGECONTEXTACTION_COPY = 5
-        val MESSAGECONTEXTACTION_FAVORITE = 6
-        val MESSAGECONTEXTACTION_SHARE = 7
-
-        val Grey_color = -0x363637
-        val Transparent = 0x00000000
-
-        val statusList = "statusList"
-
-        //System Specific Preferences - does not change across logins
-        @JvmStatic var config: Configuration = Configuration()
-
-        private var bm: BackupManager? = null
-
-        var instance: AppConfig? = null
-
-        fun reset() {
-            //CrashLogs.setUID(0);
-
-            //mConfig = new Configuration(); // we should not create new instance else app using this instance will have
-            // and issue
-            config!!.reset()
-            save()
-            instance!!.backup()
-        }
-
-
-        fun save() {
-            instance!!.saveSettings()
-        }
-    }
-
-    /*
+    } /*
     private static String serializeVector(Vector<String> vss) {
         ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream out;
@@ -344,5 +240,49 @@ class AppConfig(private val mContext: Context) {
     }
     */
 
-}
+    companion object {
+        private const val TAG = "AppSettings"
+        const val sharedPrefKey = "org.mesibo.messenger"
+        private const val systemPreferenceKey = "settings"
 
+        //System Specific Preferences - does not change across logins
+        var config: Configuration? = Configuration()
+        private var bm: BackupManager? = null
+        var instance: AppConfig? = null
+            private set
+
+        @JvmStatic
+        fun reset() {
+            //CrashLogs.setUID(0);
+
+            //mConfig = new Configuration(); // we should not create new instance else app using this instance will have
+            // and issue
+            config!!.reset()
+            save()
+            instance!!.backup()
+        }
+
+        @JvmStatic
+        fun save() {
+            instance!!.saveSettings()
+        }
+
+        fun getConfig(): Any {
+            return config!!;
+        }
+
+    }
+
+    init {
+        instance = this
+        mContext = c
+        bm = BackupManager(mContext)
+        mSharedPref = c.getSharedPreferences(sharedPrefKey, Context.MODE_PRIVATE)
+        isFirstTime = false
+        if (!mSharedPref!!.contains(systemPreferenceKey)) {
+            isFirstTime = true
+        }
+        appSetting
+        if (isFirstTime) saveSettings()
+    }
+}

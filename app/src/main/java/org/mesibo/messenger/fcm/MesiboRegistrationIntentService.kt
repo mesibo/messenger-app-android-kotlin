@@ -13,63 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.mesibo.messenger.fcm
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v4.app.JobIntentService
 import android.text.TextUtils
 import android.util.Log
-
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
-
-
 import java.io.IOException
 
-
 class MesiboRegistrationIntentService : JobIntentService() {
-
     interface GCMListener {
         fun Mesibo_onGCMToken(token: String?)
-        fun Mesibo_onGCMMessage(data: Bundle, inService: Boolean)
+        fun Mesibo_onGCMMessage(inService: Boolean)
     }
 
     override fun onHandleWork(intent: Intent) {
         onHandleIntent(intent)
     }
 
-
     //@Override
-    protected fun onHandleIntent(intent: Intent) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+    protected fun onHandleIntent(intent: Intent?) {
         var token: String? = null
         try {
-            // [START register_for_gcm]
-            // Initially this call goes out to the network to retrieve the token, subsequent calls
-            // are local.
-            // Sender ID is typically derived from google-services.json.
-            // See https://developers.google.com/cloud-messaging/android/start for details on this file.
-            //            InstanceID instanceID = InstanceID.getInstance(this);
-            //            token = instanceID.getToken(SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-
             val instanceID = FirebaseInstanceId.getInstance(FirebaseApp.initializeApp(this)!!) as FirebaseInstanceId
+            if (null == instanceID) {
+                Log.d(TAG, "FCM getInstance Failed")
+                return
+            }
             token = instanceID.token
-            // [END get_token]
-            Log.i(TAG, "FCM Registration Token: " + token!!)
-
-            // Subscribe to topic channels
-            subscribeTopics(token)
-
+            Log.d(TAG, "FCM Registration Token: $token")
         } catch (e: Exception) {
             Log.d(TAG, "Failed to complete token refresh", e)
         }
-
         if (null != mListener) {
             mListener!!.Mesibo_onGCMToken(token)
         }
@@ -91,19 +71,19 @@ class MesiboRegistrationIntentService : JobIntentService() {
     /**
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
-     * @param token GCM token
+     *
      * @throws IOException if unable to reach the GCM PubSub service
      */
     // [START subscribe_topics]
     @Throws(IOException::class)
-    private fun subscribeTopics(token: String?) {
-        //  GcmPubSub pubSub = GcmPubSub.getInstance(this);
-        for (topic in TOPICS) {
-            //     pubSub.subscribe(token, "/topics/" + topic, null);
-        }
+    private fun subscribeTopics(token: String) {
+//        GcmPubSub pubSub = GcmPubSub.getInstance(this);
+//        for (String topic : TOPICS) {
+//            pubSub.subscribe(token, "/topics/" + topic, null);
+//        }
     }
-    // [END subscribe_topics]
 
+    // [END subscribe_topics]
     private fun checkPlayServices(): Boolean {
         val apiAvailability = GoogleApiAvailability.getInstance()
         val resultCode = apiAvailability.isGooglePlayServicesAvailable(this)
@@ -111,37 +91,29 @@ class MesiboRegistrationIntentService : JobIntentService() {
     }
 
     companion object {
-
-        private val TAG = "RegIntentService"
+        private const val TAG = "RegIntentService"
         private val TOPICS = arrayOf("global")
         private var SENDER_ID = ""
         private var mListener: GCMListener? = null
-
-        val JOB_ID = 1
-        fun enqueueWork(context: Context, work: Intent) {
-            JobIntentService.enqueueWork(context, MesiboRegistrationIntentService::class.java, JOB_ID, work)
+        const val JOB_ID = 1
+        fun enqueueWork(context: Context?, work: Intent?) {
+            enqueueWork(context!!, MesiboRegistrationIntentService::class.java, JOB_ID, work!!)
         }
 
-        fun startRegistration(context: Context, senderId: String, listener: GCMListener?) {
-            if (!TextUtils.isEmpty(senderId))
-                SENDER_ID = senderId
-
-            if (listener != null)
-                mListener = listener
-
+        fun startRegistration(context: Context?, senderId: String?, listener: GCMListener?) {
+            if (!TextUtils.isEmpty(senderId)) SENDER_ID = senderId.toString()
+            if (listener != null) mListener = listener
             try {
                 val intent = Intent(context, MesiboRegistrationIntentService::class.java)
                 //context.startService(intent);
                 enqueueWork(context, intent)
             } catch (e: Exception) {
-
             }
-
         }
 
-        fun sendMessageToListener(data: Bundle, inService: Boolean) {
+        fun sendMessageToListener(inService: Boolean) {
             if (null != mListener) {
-                mListener!!.Mesibo_onGCMMessage(data, inService)
+                mListener!!.Mesibo_onGCMMessage(inService)
             }
         }
     }

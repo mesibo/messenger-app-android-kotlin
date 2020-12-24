@@ -34,64 +34,51 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
 package org.mesibo.messenger.AppSettings
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-
 import com.mesibo.api.Mesibo
+import com.mesibo.messaging.MesiboUI
 import org.mesibo.messenger.EditProfileFragment
 import org.mesibo.messenger.R
-import com.mesibo.messaging.MesiboUI
-
 
 class SettingsActivity : AppCompatActivity() {
-
-    internal var mRequestingFragment: Fragment? = null
+    var mRequestingFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
         val toolbar = findViewById<View>(R.id.settings_toolbar) as Toolbar
-
         val opt = MesiboUI.getConfig()
-
         setSupportActionBar(toolbar)
         val ab = supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(true)
         ab.setBackgroundDrawable(ColorDrawable(opt.mToolbarColor))
-
-        ab.setTitle("Settings")
-
+        ab.title = "Settings"
         val accountFragment = BasicSettingsFragment()
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
         ft.replace(R.id.settings_fragment_place, accountFragment, "null")
         ft.addToBackStack("account")
         ft.commit()
-
-
     }
 
     public override fun onResume() {
         super.onResume()
-
-        if (!Mesibo.setAppInForeground(this, 0x100, true)) {
+        if (false && !Mesibo.setAppInForeground(this, 0x100, true)) {
             finish()
             return
         }
-
         val ab = supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(true)
         ab.title = "Settings"
@@ -99,27 +86,19 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Mesibo.setAppInForeground(this, 0x100, false)
     }
 
     override fun onBackPressed() {
 
         //InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         // imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-        if (supportFragmentManager.backStackEntryCount > 1)
-
-            supportFragmentManager.popBackStackImmediate()
-        else
-            finish()
+        if (supportFragmentManager.backStackEntryCount > 1) supportFragmentManager.popBackStackImmediate() else finish()
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-
                 return true
             }
         }
@@ -129,25 +108,23 @@ class SettingsActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         //mEmojiEditText.setText("");
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         if (imm.isAcceptingText) {
-            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
         for (fragment in supportFragmentManager.fragments) {
-            if (fragment is EditProfileFragment /*&& fragment.isVisible() */)
-                fragment.onActivityResult(requestCode, resultCode, data)
+            if (data != null) {
+                (fragment as? EditProfileFragment)?.onActivityResult(requestCode, resultCode, data)
+            }
         }
-
     }
 
-    fun setRequestingFragment(mRequestingFragment: Fragment) {
+    fun setRequestingFragment(mRequestingFragment: Fragment?) {
         this.mRequestingFragment = mRequestingFragment
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (mRequestingFragment != null)
-            mRequestingFragment!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (mRequestingFragment != null) mRequestingFragment!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

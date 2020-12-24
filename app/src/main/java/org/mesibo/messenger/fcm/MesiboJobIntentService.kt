@@ -34,10 +34,9 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger.fcm
 
 import android.content.Context
@@ -45,46 +44,41 @@ import android.content.Intent
 import android.os.Handler
 import android.support.v4.app.JobIntentService
 import android.widget.Toast
+import org.mesibo.messenger.fcm.MesiboJobIntentService
 
 /**
  * Require WAKE_LOCK persmission for API level earlier than Android O
  */
-
 class MesiboJobIntentService : JobIntentService() {
-
-    internal val mHandler = Handler()
-
     override fun onHandleWork(intent: Intent) {
         try {
-            MesiboRegistrationIntentService.sendMessageToListener(intent.extras, true)
+            MesiboRegistrationIntentService.sendMessageToListener(true)
         } catch (e: Exception) {
-
         }
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
     }
 
+    val mHandler = Handler()
+
     // Helper for showing tests
-    internal fun toast(text: CharSequence) {
+    fun toast(text: CharSequence?) {
         mHandler.post { Toast.makeText(this@MesiboJobIntentService, text, Toast.LENGTH_SHORT).show() }
     }
 
     companion object {
-        internal val JOB_ID = 1000
+        const val JOB_ID = 1000
 
         /**
          * Convenience method for enqueuing work in to this service.
          */
-        internal fun enqueueWork(context: Context, work: Intent) {
+        fun enqueueWork(context: Context?, work: Intent?) {
             try {
-                JobIntentService.enqueueWork(context, MesiboJobIntentService::class.java, JOB_ID, work)
+                enqueueWork(context!!, MesiboJobIntentService::class.java, JOB_ID, work!!)
             } catch (e: Exception) {
-
             }
-
         }
     }
 }

@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "470359684336",
-    "firebase_url": "https://mesibo-open-sour-1548147154793.firebaseio.com",
-    "project_id": "mesibo-open-sour-1548147154793",
-    "storage_bucket": "mesibo-open-sour-1548147154793.appspot.com"
+    "project_number": "123456",
+    "firebase_url": "https://messenger.firebaseio.com",
+    "project_id": "messenger",
+    "storage_bucket": "messenger.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:470359684336:android:6d7bf190c0cbf639",
+        "mobilesdk_app_id": "1:123456:android:134824",
         "android_client_info": {
           "package_name": "org.mesibo.messenger"
         }
       },
       "oauth_client": [
         {
-          "client_id": "470359684336-s5hi7ls22gs3pl51neoi8thd60tjdmg6.apps.googleusercontent.com",
+          "client_id": "use-your-own-google-services-file.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMZFJwt7vuSVTxntFU4aDdcxW8CCqYUFA"
+          "current_key": "use_your_own_api_key"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "470359684336-s5hi7ls22gs3pl51neoi8thd60tjdmg6.apps.googleusercontent.com",
+              "client_id": "use-your-own-google-services-file.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

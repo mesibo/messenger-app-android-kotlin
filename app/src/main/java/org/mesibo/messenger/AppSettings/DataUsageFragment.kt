@@ -34,39 +34,28 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
 package org.mesibo.messenger.AppSettings
 
-
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceCategory
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.preference.PreferenceScreen
-import android.support.v7.preference.SwitchPreferenceCompat
-
-import org.mesibo.messenger.SampleAPI
-
+import android.support.v7.preference.*
 import org.mesibo.messenger.R
+import org.mesibo.messenger.SampleAPI.mediaAutoDownload
 
-class DataUsageFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-
-    internal lateinit var sharedPreferences: SharedPreferences
-
-
+class DataUsageFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
+    var sharedPreferences: SharedPreferences? = null
     override fun onCreatePreferences(bundle: Bundle, s: String) {
         //add xml
-        val ab = (activity as AppCompatActivity).supportActionBar
+        val ab = (activity as AppCompatActivity?)!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(true)
         ab.title = "Data usage settings"
-
         addPreferencesFromResource(R.xml.data_usage)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity!!)
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val preference = findPreference("auto")
         val preferenceScreen = findPreference("preferenceScreen") as PreferenceScreen
         val myPrefCatcell = findPreference("preferenceCategorycell") as PreferenceCategory
@@ -87,20 +76,15 @@ class DataUsageFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         displaySwitches()
     }
 
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-
         val preferenceScreen = findPreference("preferenceScreen") as PreferenceScreen
         val myPrefCatcell = findPreference("preferenceCategorycell") as PreferenceCategory
         val myPrefCatwifi = findPreference("preferenceCategorywifi") as PreferenceCategory
         val myPrefCatroam = findPreference("preferenceCategoryroam") as PreferenceCategory
-
         val preference = findPreference(key)
         if (preference is SwitchPreferenceCompat && key.equals("auto", ignoreCase = true)) {
-
             val enabled = preference.isChecked
-            SampleAPI.mediaAutoDownload = enabled
-
+            mediaAutoDownload = enabled
             try {
                 //when this is null
                 myPrefCatcell.isEnabled = !enabled
@@ -108,10 +92,7 @@ class DataUsageFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
                 myPrefCatroam.isEnabled = !enabled
             } catch (e: Exception) {
             }
-
-
         }
-
     }
 
     override fun onPause() {
@@ -126,14 +107,11 @@ class DataUsageFragment : PreferenceFragmentCompat(), SharedPreferences.OnShared
         //unregister event bus.
     }
 
-
     fun displaySwitches() {
         val preference = findPreference("auto")
-
-        val autoDownload = SampleAPI.mediaAutoDownload
+        val autoDownload = mediaAutoDownload
         //preference.setEnabled(autoDownload);
         val datausage = preference as SwitchPreferenceCompat
         datausage.isChecked = autoDownload
     }
-
 }

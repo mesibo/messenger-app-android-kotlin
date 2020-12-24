@@ -34,10 +34,9 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
 import android.app.Notification
@@ -54,33 +53,11 @@ import android.os.Handler
 import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
 import android.widget.RemoteViews
-
 import com.mesibo.api.Mesibo
-
-import java.util.ArrayList
-import java.util.Timer
-import java.util.TimerTask
+import org.mesibo.messenger.MainApplication
+import java.util.*
 
 class NotifyUser(context: Context) {
-
-    private val mNotificationContentList = ArrayList<NotificationContent>()
-    private var mContxt: Context? = null
-    private var mPackageName: String? = null
-    private var mTimerTask: TimerTask? = null
-    private var mTimer: Timer? = null
-    private val mUiHandler = Handler(MainApplication.appContext?.getMainLooper())
-
-    private// This intent is fired when notification is clicked
-    val defaultIntent: PendingIntent
-        get() {
-            val intent = Intent(mContxt, StartUpActivity::class.java)
-            val bundle = Bundle()
-            intent.putExtras(bundle)
-            return PendingIntent.getActivity(mContxt, 0, intent, 0)
-        }
-
-    private val mNotifyRunnable = Runnable { notifyMessages() }
-
     class NotificationContent {
         var title: String? = null
         var content: String? = null
@@ -89,18 +66,16 @@ class NotifyUser(context: Context) {
         var style: NotificationCompat.Style? = null
     }
 
-    init {
-        mContxt = context
-        mPackageName = context.packageName
-        createNotificationChannels()
-        Mesibo.addListener(this)
-    }
-
+    private val mNotificationContentList: MutableList<NotificationContent> = ArrayList()
+    private var mContxt: Context? = null
+    private var mPackageName: String? = null
+    private var mTimerTask: TimerTask? = null
+    private var mTimer: Timer? = null
+    private val mUiHandler: Handler = Handler(MainApplication.getAppContext()?.getMainLooper())
     private fun createNotificationChannel(id: String, name: String, important: Int) {
         if (Build.VERSION.SDK_INT < 26) {
             return
         }
-
         val nchannel = NotificationChannel(id, name, important)
 
         // Sets whether notifications posted to this channel should display notification lights
@@ -111,9 +86,7 @@ class NotifyUser(context: Context) {
         nchannel.lightColor = Color.GREEN
         // Sets whether notifications posted to this channel appear on the lockscreen or not
         nchannel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
-
         val notificationManager = mContxt!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
         notificationManager.createNotificationChannel(nchannel)
     }
 
@@ -122,20 +95,16 @@ class NotifyUser(context: Context) {
         createNotificationChannel(NOTIFYCALL_CHANNEL_ID, NOTIFYCALL_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
     }
 
-    fun sendNotification(channelId: String, id: Int, intent: PendingIntent, n: NotificationContent) {
+    fun sendNotification(channelId: String?, id: Int, intent: PendingIntent?, n: NotificationContent) {
 
         // Use NotificationCompat.Builder to set up our notification.
-        val builder = NotificationCompat.Builder(mContxt!!, channelId)
-
-        if (null != n.title)
-            builder.setContentTitle(n.title)
-        if (null != n.content)
-            builder.setContentText(n.content)
+        val builder = NotificationCompat.Builder(mContxt!!, channelId!!)
+        if (null != n.title) builder.setContentTitle(n.title)
+        if (null != n.content) builder.setContentText(n.content)
 
         // The subtext, which appears under the text on newer devices.
         // This will show-up in the devices with Android 4.2 and above only
-        if (!TextUtils.isEmpty(n.subContent))
-            builder.setSubText(n.subContent)
+        if (!TextUtils.isEmpty(n.subContent)) builder.setSubText(n.subContent)
 
         //icon appears in device notification bar and right hand corner of notification
         //https://clevertap.com/blog/fixing-notification-icon-for-android-lollipop-and-above/
@@ -146,21 +115,16 @@ class NotifyUser(context: Context) {
 
         // Large icon appears on the left of the notification
         builder.setLargeIcon(BitmapFactory.decodeResource(mContxt!!.resources, R.drawable.notify_large))
-
         if (null != n.v) {
             builder.setCustomContentView(n.v)
         }
-
-        if (null == n.style && null != n.content)
-            n.style = NotificationCompat.BigTextStyle().bigText(n.content)
-
+        if (null == n.style && null != n.content) n.style = NotificationCompat.BigTextStyle().bigText(n.content)
         builder.setStyle(n.style)
 
         // clears on click
         builder.setAutoCancel(true)
         builder.setDefaults(Notification.DEFAULT_ALL)
         builder.priority = Notification.PRIORITY_MAX
-
         val notificationManager = mContxt!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Will display the notification in the notification bar
@@ -169,9 +133,7 @@ class NotifyUser(context: Context) {
 
     @Synchronized
     fun clearNotification() {
-
-        val notificationManager = MainApplication.appContext?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        val notificationManager = MainApplication.getAppContext()?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mNotificationContentList.clear()
         // Will display the notification in the notification bar
         notificationManager.cancel(TYPE_MESSAGE)
@@ -180,47 +142,50 @@ class NotifyUser(context: Context) {
         //notificationManager.cancel(TYPE_OTHER);
     }
 
+    // This intent is fired when notification is clicked
+    private val defaultIntent: PendingIntent
+        private get() {
+            // This intent is fired when notification is clicked
+            val intent = Intent(mContxt, StartUpActivity::class.java)
+            val bundle = Bundle()
+            intent.putExtras(bundle)
+            return PendingIntent.getActivity(mContxt, 0, intent, 0)
+        }
 
-    fun sendNotification(channelid: String, id: Int, title: String, content: String?) {
+    fun sendNotification(channelid: String?, id: Int, title: String?, content: String?) {
         val n = NotificationContent()
         n.title = title
         n.content = content
-
         sendNotification(channelid, id, defaultIntent, n)
     }
 
     @Synchronized
     private fun notifyMessages() {
-        if (0 == mNotificationContentList.size)
-            return
-
+        if (0 == mNotificationContentList.size) return
         val notify = mNotificationContentList[mNotificationContentList.size - 1]
-
-        val title = "New Message from " + notify.title!!
+        val title = "New Message from " + notify.title
         var inboxStyle: NotificationCompat.InboxStyle? = null
         if (mNotificationContentList.size > 1) {
-
             inboxStyle = NotificationCompat.InboxStyle()
-            val iterator = mNotificationContentList.iterator()
-
+            val iterator: Iterator<*> = mNotificationContentList.iterator()
             while (iterator.hasNext()) {
-                val n = iterator.next()
+                val n = iterator.next() as NotificationContent
                 inboxStyle.addLine(n.title + " : " + n.content)
             }
-
             inboxStyle.setBigContentTitle(title)
-            inboxStyle.setSummaryText("$mCount new messages")
+            inboxStyle.setSummaryText(mCount.toString() + " new messages")
             notify.style = inboxStyle
-            sendNotification(NotifyUser.NOTIFYMESSAGE_CHANNEL_ID, TYPE_MESSAGE, defaultIntent, notify)
+            sendNotification(NOTIFYMESSAGE_CHANNEL_ID, TYPE_MESSAGE, defaultIntent, notify)
             return
         }
 
         // Don't use notify object else we it will overwrite title
-        sendNotification(NotifyUser.NOTIFYMESSAGE_CHANNEL_ID, TYPE_MESSAGE, title, notify.content)
+        sendNotification(NOTIFYMESSAGE_CHANNEL_ID, TYPE_MESSAGE, title, notify.content)
     }
 
+    private val mNotifyRunnable = Runnable { notifyMessages() }
     @Synchronized
-    fun sendNotificationInList(title: String, message: String) {
+    fun sendNotificationInList(title: String?, message: String?) {
 
 
         // it is also possible to limit only latest notification from a user by adding params and checking for duplicate
@@ -229,9 +194,7 @@ class NotifyUser(context: Context) {
         notify.content = message
 
         // inboxStyle can only have max 5 messages
-        if (mNotificationContentList.size >= 5)
-            mNotificationContentList.removeAt(0)
-
+        if (mNotificationContentList.size >= 5) mNotificationContentList.removeAt(0)
         mNotificationContentList.add(notify)
         mCount++
 
@@ -240,33 +203,34 @@ class NotifyUser(context: Context) {
 
         //if(Mesibo.isMoreRealtimeMessages(params.ts))
         //  return;
-
         if (null != mTimer) {
             mTimer!!.cancel()
             mTimer = null
         }
-
         mTimer = Timer()
         mTimerTask = object : TimerTask() {
             override fun run() {
                 mUiHandler.post(mNotifyRunnable)
             }
         }
-
         mTimer!!.schedule(mTimerTask, 1000)
-
         return
     }
 
     companion object {
-        val TYPE_MESSAGE = 0
-        val TYPE_OTHER = 0
+        const val TYPE_MESSAGE = 0
+        const val TYPE_OTHER = 0
         var mCount = 0
+        const val NOTIFYMESSAGE_CHANNEL_ID = "MESSAGE_CHANNEL"
+        private const val NOTIFYMESSAGE_CHANNEL_NAME = "Messages"
+        const val NOTIFYCALL_CHANNEL_ID = "CALL_CHANNEL"
+        private const val NOTIFYCALL_CHANNEL_NAME = "Calls"
+    }
 
-        val NOTIFYMESSAGE_CHANNEL_ID = "MESSAGE_CHANNEL"
-        private val NOTIFYMESSAGE_CHANNEL_NAME = "Messages"
-
-        val NOTIFYCALL_CHANNEL_ID = "CALL_CHANNEL"
-        private val NOTIFYCALL_CHANNEL_NAME = "Calls"
+    init {
+        mContxt = context
+        mPackageName = context.packageName
+        createNotificationChannels()
+        Mesibo.addListener(this)
     }
 }

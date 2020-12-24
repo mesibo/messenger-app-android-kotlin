@@ -34,13 +34,12 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -56,37 +55,34 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SwitchCompat
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-
 import com.mesibo.api.Mesibo
+import com.mesibo.api.Mesibo.MessageListener
+import com.mesibo.api.Mesibo.MessageParams
+import com.mesibo.api.Mesibo.ReadDbSession
+import com.mesibo.api.Mesibo.UserProfile
+import com.mesibo.api.Mesibo.UserProfileUpdateListener
 import com.mesibo.api.MesiboUtils
 import com.mesibo.emojiview.EmojiconTextView
-
-import org.mesibo.messenger.Utils.AppUtils
-
-
-import java.net.URLConnection
-import java.util.ArrayList
-
 import com.mesibo.mediapicker.AlbumListData
 import com.mesibo.mediapicker.AlbumPhotosData
 import com.mesibo.messaging.MesiboUI
+import org.mesibo.messenger.SampleAPI.addContacts
+import org.mesibo.messenger.SampleAPI.deleteGroup
+import org.mesibo.messenger.SampleAPI.editMembers
+import org.mesibo.messenger.SampleAPI.getGroup
+import org.mesibo.messenger.SampleAPI.phone
+import org.mesibo.messenger.SampleAPI.setAdmin
+import org.mesibo.messenger.Utils.AppUtils
+import java.net.URLConnection
+import java.util.*
 
-import android.view.View.GONE
-import android.view.View.VISIBLE
-
-
-class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfileUpdateListener {
+class ShowProfileFragment : Fragment(), MessageListener, UserProfileUpdateListener {
     private var mListener: OnFragmentInteractionListener? = null
-    private var mThumbnailMediaFiles: ArrayList<String>? = null
+    private var mThumbnailMediaFiles: ArrayList<String?>? = null
     private var mGallery: LinearLayout? = null
     private var mMediaFilesCounter = 0
     private var mMediaCounterView: TextView? = null
@@ -97,42 +93,32 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
     private var mGroupMemebersCard: CardView? = null
     private var mExitGroupCard: CardView? = null
     private var mExitGroupText: TextView? = null
-
     var mAdminCount = 0
     var mAdmin = 0
-
-    internal lateinit var mRecyclerView: RecyclerView
-    internal var mAdapter: RecyclerView.Adapter<*>? = null
-    internal lateinit var mAddMemebers: LinearLayout
-    internal var mGroupMemberList = ArrayList<Mesibo.UserProfile>()
-    internal lateinit var mProgressDialog: ProgressDialog
-
-    internal lateinit var mll: LinearLayout
-    internal lateinit var mStatus: TextView
-    internal lateinit var mStatusTime: TextView
-    internal lateinit var mMobileNumber: TextView
-    internal lateinit var mPhoneType: TextView
-    private var mReadSession: Mesibo.ReadDbSession? = null
-
+    var mRecyclerView: RecyclerView? = null
+    var mAdapter: RecyclerView.Adapter<*>? = null
+    var mAddMemebers: LinearLayout? = null
+    var mGroupMemberList = ArrayList<UserProfile?>()
+    var mProgressDialog: ProgressDialog? = null
+    var mll: LinearLayout? = null
+    var mStatus: TextView? = null
+    var mStatusTime: TextView? = null
+    var mMobileNumber: TextView? = null
+    var mPhoneType: TextView? = null
+    private var mReadSession: ReadDbSession? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
-
         val v = inflater.inflate(R.layout.fragment_show_user_profile_details, container, false)
-
-
-
         mDefaultProfileBmp = BitmapFactory.decodeResource(activity!!.resources, R.drawable.default_user_image)
         mThumbnailMediaFiles = ArrayList()
         mGalleryData = ArrayList()
-
         val Images = AlbumListData()
         Images.setmAlbumName("Images")
         val Video = AlbumListData()
@@ -142,16 +128,13 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
         mGalleryData!!.add(Images)
         mGalleryData!!.add(Video)
         mGalleryData!!.add(Documents)
-
         mMediaCardView = v.findViewById<View>(R.id.up_media_layout) as CardView
-        mMediaCardView!!.visibility = GONE
+        mMediaCardView!!.visibility = View.GONE
         Mesibo.addListener(this)
-
-        mReadSession = Mesibo.ReadDbSession(mUser!!.address, mUser!!.groupid, null, this)
+        mReadSession = ReadDbSession(mUser!!.address, mUser!!.groupid, null, this)
         mReadSession!!.enableFiles(true)
         mReadSession!!.enableReadReceipt(true)
         mReadSession!!.read(100)
-
         mProgressDialog = AppUtils.getProgressDialog(activity, "Please wait...")
         mMessageBtn = v.findViewById<View>(R.id.up_message_btn) as ImageView
         mMessageBtn!!.setOnClickListener { activity!!.finish() }
@@ -159,71 +142,58 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
 
         // change in file
         mAddMemebers = v.findViewById<View>(R.id.showprofile_add_memeber) as LinearLayout
-        mAddMemebers.visibility = GONE
+        mAddMemebers!!.visibility = View.GONE
         mll = v.findViewById<View>(R.id.up_status_card) as LinearLayout
         mStatus = v.findViewById<View>(R.id.up_status_text) as TextView
         mStatusTime = v.findViewById<View>(R.id.up_status_update_time) as TextView
         mMobileNumber = v.findViewById<View>(R.id.up_number) as TextView
         mPhoneType = v.findViewById<View>(R.id.up_phone_type) as TextView
-
-        mRecyclerView.layoutManager = LinearLayoutManager(mRecyclerView.context)
-        mAdapter = GroupMemeberAdapter(activity!!, mGroupMemberList)
-        mRecyclerView.adapter = mAdapter
+        mRecyclerView!!.layoutManager = LinearLayoutManager(mRecyclerView!!.context)
+        mAdapter = GroupMemeberAdapter(activity, mGroupMemberList)
+        mRecyclerView!!.adapter = mAdapter
         ///
         mGallery = v.findViewById<View>(R.id.up_gallery) as LinearLayout
         mMediaCounterView = v.findViewById<View>(R.id.up_media_counter) as TextView
         mMediaCounterView!!.text = "$mMediaFilesCounter\u3009 "
-
         mStatusPhoneCard = v.findViewById<View>(R.id.status_phone_card) as CardView
         mGroupMemebersCard = v.findViewById<View>(R.id.showprofile_members_card) as CardView
         mExitGroupCard = v.findViewById<View>(R.id.group_exit_card) as CardView
         mExitGroupText = v.findViewById<View>(R.id.group_exit_text) as TextView
-        mExitGroupCard!!.visibility = GONE
+        mExitGroupCard!!.visibility = View.GONE
         mExitGroupCard!!.setOnClickListener {
-            mProgressDialog.show()
-            SampleAPI.deleteGroup(mUser!!.groupid, object : SampleAPI.ResponseHandler() {
+            mProgressDialog!!.show()
+            deleteGroup(mUser!!.groupid, object : SampleAPI.ResponseHandler() {
                 override fun HandleAPIResponse(response: SampleAPI.Response?) {
                     if (null != response && response.result == "OK") {
-                        if (mProgressDialog.isShowing)
-                            mProgressDialog.dismiss()
+                        if (mProgressDialog!!.isShowing()) mProgressDialog!!.dismiss()
                         Mesibo.deleteUserProfile(mUser, true, false)
                         activity!!.finish()
                         //UIManager.launchMesiboContacts(getActivity(), 0, 0, Intent.FLAG_ACTIVITY_CLEAR_TOP, null);
-
                     }
-
                 }
             })
         }
-
         val switchCompat = v.findViewById<View>(R.id.up_mute_switch) as SwitchCompat
         switchCompat.isChecked = mUser!!.isMuted
         switchCompat.setOnCheckedChangeListener { buttonView, isChecked ->
             mUser!!.toggleMute()
             Mesibo.setUserProfile(mUser, false)
         }
-
         val linearLayout = v.findViewById<View>(R.id.up_open_media) as LinearLayout
         linearLayout.setOnClickListener {
             if (mGalleryData!!.size > 0) {
                 for (i in mGalleryData!!.indices.reversed()) {
                     val tempdata = mGalleryData!![i]
-                    if (tempdata.getmPhotoCount() == 0)
-                        mGalleryData!!.remove(tempdata)
+                    if (tempdata.getmPhotoCount() == 0) mGalleryData!!.remove(tempdata)
                 }
                 /*
                     Intent fbIntent = new Intent(getActivity(),
                             AlbumStartActivity.class);
-                    startActivity(fbIntent);*/
-
-                UIManager.launchAlbum(activity!!, mGalleryData!!)
+                    startActivity(fbIntent);*/UIManager.launchAlbum(activity, mGalleryData)
             }
         }
-
-
         return v
     }
-
 
     private fun addThumbnailToGallery(fileInfo: Mesibo.FileInfo) {
         var thumbnailView: View? = null
@@ -237,55 +207,37 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
                     thumbnailView = getThumbnailView(fileInfo.image, false);
                 } else if (isVideoFile(path)) {
                     thumbnailView = getThumbnailView(fileInfo.image, (fileInfo.type == 2 ? true:false));
-                }*/
-                if (null != thumbnailView) {
+                }*/if (null != thumbnailView) {
                     thumbnailView.isClickable = true
                     thumbnailView.tag = mMediaFilesCounter - 1
-                    thumbnailView.setOnClickListener { v ->
+                    thumbnailView.setOnClickListener(View.OnClickListener { v ->
                         val index = v.tag as Int
                         val path = mThumbnailMediaFiles!![index]
-                        UIManager.launchImageViewer(activity!!, mThumbnailMediaFiles!!, index)
-                    }
+                        UIManager.launchImageViewer(activity, mThumbnailMediaFiles, index)
+                    })
                     mGallery!!.addView(thumbnailView)
                 }
             }
         }
     }
 
-
-    internal fun getThumbnailView(bm: Bitmap, isVideo: Boolean?): View {
+    fun getThumbnailView(bm: Bitmap?, isVideo: Boolean): View {
         val layoutInflater = LayoutInflater.from(activity)
         val view = layoutInflater.inflate(R.layout.video_layer_layout_horizontal_gallery, null, false)
         val thumbpic = view.findViewById<View>(R.id.mp_thumbnail) as ImageView
         thumbpic.setImageBitmap(bm)
         //thumbpic.setScaleType(ImageView.ScaleType.CENTER_CROP);
         val layer = view.findViewById<View>(R.id.video_layer) as ImageView
-        layer.visibility = if (isVideo!!) VISIBLE else GONE
+        layer.visibility = if (isVideo) View.VISIBLE else View.GONE
         val metrics = DisplayMetrics()
         activity!!.windowManager.defaultDisplay.getMetrics(metrics)
-        val width = (metrics.widthPixels - 50) / 5 //number of pics in media view
+        val width = ((metrics.widthPixels - 50) / 5) //number of pics in media view
         view.layoutParams = ViewGroup.LayoutParams(width, width)
         return view
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-
-
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.user_profile_menu, menu)
-
-
-
-        if (null != mUser && mUser!!.isBlocked) {
-
-            val menuItem = menu!!.findItem(R.id.menu_user_block)
-            if (null != menuItem)
-                menuItem.title = "Unblock"
-
-        }
-
-
-
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -295,52 +247,17 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
                 activity!!.onBackPressed()
                 return true
             }
-
-            R.id.menu_user_block -> {
-
-
-                //Check if user is blocked or unblocked, handle accordingly
-                if (null != mUser && mUser!!.isBlocked) {
-
-                    mUser!!.blockMessages(false)
-                    mUser!!.blockGroupMessages(false)
-                    Mesibo.setUserProfile(mUser, false)
-
-                } else {
-
-
-                    val mUserProfile = Mesibo.UserProfile()
-
-                    mUserProfile.address = mUser!!.address
-                    mUserProfile.name = mUser!!.name
-                    mUserProfile.picturePath = mUser!!.picturePath
-                    mUserProfile.status = mUser!!.status
-
-                    mUserProfile.blockMessages(true)
-                    mUserProfile.blockGroupMessages(true)
-                    Mesibo.setUserProfile(mUserProfile, false)
-
-                }
-
-
-
-
-
-                (activity as Activity).invalidateOptionsMenu()
-
-                return true
-            }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            mListener = context
+        mListener = if (context is OnFragmentInteractionListener) {
+            context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener")
         }
     }
 
@@ -349,24 +266,15 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
         mListener = null
     }
 
-    override fun Mesibo_onMessage(messageParams: Mesibo.MessageParams, bytes: ByteArray): Boolean {
+    override fun Mesibo_onMessage(messageParams: MessageParams, bytes: ByteArray): Boolean {
         return false
     }
 
-    override fun Mesibo_onMessageStatus(params: Mesibo.MessageParams) {
-
-    }
-
-    override fun Mesibo_onActivity(messageParams: Mesibo.MessageParams, i: Int) {
-
-    }
-
-    override fun Mesibo_onLocation(messageParams: Mesibo.MessageParams, location: Mesibo.Location) {
-
-    }
-
-    override fun Mesibo_onFile(messageParams: Mesibo.MessageParams, fileInfo: Mesibo.FileInfo) {
-        mMediaCardView!!.visibility = VISIBLE
+    override fun Mesibo_onMessageStatus(params: MessageParams) {}
+    override fun Mesibo_onActivity(messageParams: MessageParams, i: Int) {}
+    override fun Mesibo_onLocation(messageParams: MessageParams, location: Mesibo.Location) {}
+    override fun Mesibo_onFile(messageParams: MessageParams, fileInfo: Mesibo.FileInfo) {
+        mMediaCardView!!.visibility = View.VISIBLE
         mMediaFilesCounter++
         mMediaCounterView!!.text = "$mMediaFilesCounter\u3009 "
         val newPhoto = AlbumPhotosData()
@@ -374,12 +282,8 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
         newPhoto.setmSourceUrl(fileInfo.path)
         val tempAlbum: AlbumListData
         var index = 0
-        if (fileInfo.type == VIDEO_FILE)
-            index = 1
-        else if (fileInfo.type != IMAGE_FILE)
-            index = 2
+        if (fileInfo.type == VIDEO_FILE) index = 1 else if (fileInfo.type != IMAGE_FILE) index = 2
         tempAlbum = mGalleryData!![index]
-
         if (tempAlbum.getmPhotosList() == null) {
             val newPhotoList = ArrayList<AlbumPhotosData>()
             tempAlbum.setmPhotosList(newPhotoList)
@@ -394,127 +298,95 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
 
     fun parseGroupMembers(members: String?): Boolean {
         var members = members
-        if (TextUtils.isEmpty(members))
-            return false
-
-        val s = members!!.split("\\:".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        if (null == s || s.size < 2)
-            return false
-
-        try {
-            mAdminCount = Integer.parseInt(s[0])
+        if (TextUtils.isEmpty(members)) return false
+        val s = members!!.split("\\:").toTypedArray()
+        if (null == s || s.size < 2) return false
+        mAdminCount = try {
+            s[0].toInt()
         } catch (nfe: NumberFormatException) {
             return false
         }
-
         members = s[1]
-        val users = members.split("\\,".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                ?: return false
-
-        val phone = SampleAPI.phone
+        val users = members.split("\\,").toTypedArray() ?: return false
+        val phone = phone
         //MUST not happen
-        if (TextUtils.isEmpty(phone))
-            return false
-
+        if (TextUtils.isEmpty(phone)) return false
         mGroupMemberList.clear()
         //only owner can delete group
-        mExitGroupText!!.text = if (phone!!.equals(users[0], ignoreCase = true)) "Delete Group" else "Exit Group"
-
+        mExitGroupText!!.text = if (phone.equals(users[0], ignoreCase = true)) "Delete Group" else "Exit Group"
         mAdmin = 0
-
-        val unknownProfiles = ArrayList<Mesibo.UserProfile>()
-
+        val unknownProfiles = ArrayList<UserProfile>()
         for (i in users.indices) {
-            var up: Mesibo.UserProfile? = null
+            var up: UserProfile? = null
             val peer = users[i]
             if (phone.equals(peer, ignoreCase = true)) {
                 up = Mesibo.getSelfProfile()
-                if (i < mAdminCount)
-                    mAdmin = 1
+                if (i < mAdminCount) mAdmin = 1
             }
-
-            if (null == up)
-                up = Mesibo.getUserProfile(peer, 0)
-
+            if (null == up) up = Mesibo.getUserProfile(peer, 0)
             if (null == up) {
 
                 // we can do this instead but the problem is all unknown people will be shown in
                 // contact list
                 up = Mesibo.createUserProfile(peer, 0, peer)
-
             }
-
-            if (up!!.flag and Mesibo.UserProfile.FLAG_TEMPORARY.toLong() > 0)
-                unknownProfiles.add(up)
-
+            if (up!!.flag and UserProfile.FLAG_TEMPORARY.toLong() > 0) unknownProfiles.add(up)
             mGroupMemberList.add(up)
         }
-
         if (unknownProfiles.size > 0) {
-            SampleAPI.addContacts(unknownProfiles, true)
+            addContacts(unknownProfiles, true)
         }
-
-        mAddMemebers.visibility = if (mAdmin != 0) VISIBLE else GONE
+        mAddMemebers!!.visibility = if (mAdmin != 0) View.VISIBLE else View.GONE
         mAdapter!!.notifyDataSetChanged()
         return true
     }
 
-    override fun Mesibo_onUserProfileUpdated(userProfile: Mesibo.UserProfile, i: Int, b: Boolean) {
-        if (null != mAdapter)
-            mAdapter!!.notifyDataSetChanged()
+    override fun Mesibo_onUserProfileUpdated(userProfile: UserProfile, i: Int, b: Boolean) {
+        if (null != mAdapter) mAdapter!!.notifyDataSetChanged()
     }
 
     override fun onResume() {
         super.onResume()
-        if (mUser!!.groupid > 0 && 0L == mUser!!.flag and Mesibo.UserProfile.FLAG_DELETED.toLong()) {
-            mExitGroupCard!!.visibility = VISIBLE
-            mGroupMemebersCard!!.visibility = VISIBLE
-            mStatusPhoneCard!!.visibility = GONE
-            mAddMemebers.setOnClickListener {
+        if (mUser!!.groupid > 0 && 0L == mUser!!.flag and UserProfile.FLAG_DELETED.toLong()) {
+            mExitGroupCard!!.visibility = View.VISIBLE
+            mGroupMemebersCard!!.visibility = View.VISIBLE
+            mStatusPhoneCard!!.visibility = View.GONE
+            mAddMemebers!!.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putLong("groupid", mUser!!.groupid)
-                UIManager.launchMesiboContacts(activity!!, 0, 4, 0, bundle)
+                UIManager.launchMesiboContacts(activity, 0, 4, 0, bundle)
                 activity!!.finish()
             }
-
             if (TextUtils.isEmpty(mUser!!.groupMembers)) {
-                mProgressDialog.show()
-                SampleAPI.getGroup(mUser!!.groupid, object : SampleAPI.ResponseHandler() {
+                mProgressDialog!!.show()
+                getGroup(mUser!!.groupid, object : SampleAPI.ResponseHandler() {
                     override fun HandleAPIResponse(response: SampleAPI.Response?) {
-
-                        if (mProgressDialog.isShowing)
-                            mProgressDialog.dismiss()
-
+                        if (mProgressDialog!!.isShowing) mProgressDialog!!.dismiss()
                         if (null == response || response.result != "OK") {
-                            mGroupMemebersCard!!.visibility = GONE
-                            mExitGroupText!!.visibility = GONE
+                            mGroupMemebersCard!!.visibility = View.GONE
+                            mExitGroupText!!.visibility = View.GONE
                             return
                         }
-
                         parseGroupMembers(response.members)
                     }
                 })
-            } else
-                parseGroupMembers(mUser!!.groupMembers)
-
+            } else parseGroupMembers(mUser!!.groupMembers)
         } else {
-            mExitGroupCard!!.visibility = GONE
-            mGroupMemebersCard!!.visibility = GONE
-            mStatusPhoneCard!!.visibility = VISIBLE
-
+            mExitGroupCard!!.visibility = View.GONE
+            mGroupMemebersCard!!.visibility = View.GONE
+            mStatusPhoneCard!!.visibility = View.VISIBLE
             if (null == mUser!!.status) {
-                mll.visibility = GONE
+                mll!!.visibility = View.GONE
             } else {
-                mll.visibility = VISIBLE
-                mStatus.text = mUser!!.status
+                mll!!.visibility = View.VISIBLE
+                mStatus!!.text = mUser!!.status
             }
 
             //statusTime.setText((mUserProfiledata.lastActive));
-            mStatusTime.text = ""
-            mMobileNumber.text = mUser!!.address
-            mPhoneType.text = "Mobile"
+            mStatusTime!!.text = ""
+            mMobileNumber!!.text = mUser!!.address
+            mPhoneType!!.text = "Mobile"
         }
-
     }
 
     /**
@@ -528,17 +400,12 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
      */
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onFragmentInteraction(uri: Uri?)
     }
 
-    inner class GroupMemeberAdapter(context: Context, list: ArrayList<Mesibo.UserProfile>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class GroupMemeberAdapter(context: Context?, list: ArrayList<UserProfile?>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private var mContext: Context? = null
-        private var mDataList: ArrayList<Mesibo.UserProfile>? = null
-
-        init {
-            this.mContext = context
-            mDataList = list
-        }
+        private var mDataList: ArrayList<UserProfile?>? = null
 
         inner class GroupMembersCellsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             var mBoundString: String? = null
@@ -557,152 +424,120 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
             }
         }
 
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.showprofile_group_member_rv_item, parent, false)
             return GroupMembersCellsViewHolder(view)
-
         }
 
-
-        override fun onBindViewHolder(holderr: RecyclerView.ViewHolder, position: Int) {
+        @SuppressLint("RecyclerView")
+        override fun onBindViewHolder(holderr: RecyclerView.ViewHolder, position: Int){
             val pos = position
             val user = mDataList!![position]
             val holder = holderr as GroupMembersCellsViewHolder
-
-
-
-            if (!TextUtils.isEmpty(user.name))
-                holder.mContactsName!!.text = user.name
-            else
-                holder.mContactsName!!.text = ""
+            if (!TextUtils.isEmpty(user!!.name)) holder.mContactsName!!.text = user.name else holder.mContactsName!!.text = ""
             val b: Bitmap? = null
             val filePath = Mesibo.getUserProfilePicturePath(user, Mesibo.FileInfo.TYPE_AUTO)
-
             val memberImage = BitmapFactory.decodeFile(filePath)
-            if (null != memberImage)
-                holder.mContactsProfile!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(memberImage))
-            else
-                holder.mContactsProfile!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(mDefaultProfileBmp))
-
+            if (null != memberImage) holder.mContactsProfile!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(memberImage)) else holder.mContactsProfile!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(mDefaultProfileBmp))
             if (position < mAdminCount) {
-                holder.mAdminTextView!!.visibility = VISIBLE
+                holder.mAdminTextView!!.visibility = View.VISIBLE
             } else {
-                holder.mAdminTextView!!.visibility = GONE
+                holder.mAdminTextView!!.visibility = View.GONE
             }
-
             if (TextUtils.isEmpty(user.status)) {
                 user.status = ""
             }
             holder.mContactsStatus!!.text = user.status
 
             // only admin can have menu, also owner can't be deleted
-
             holder.mView!!.setOnClickListener(View.OnClickListener {
                 val profile = mDataList!![position]
-
                 if (0 == mAdmin || 0 == position) {
-                    if (profile.isSelfProfile) {
+                    if (profile!!.isSelfProfile) {
                         return@OnClickListener
                     }
-
-                    MesiboUI.launchMessageView(activity!!, profile.address, profile.groupid)
+                    MesiboUI.launchMessageView(activity, profile.address, profile.groupid)
                     activity!!.finish()
                     return@OnClickListener
                 }
-
                 val items = ArrayList<String>()
-
                 val makeAdmin: Boolean
-                if (position >= mAdminCount) {
+                makeAdmin = if (position >= mAdminCount) {
                     items.add("Make Admin")
-                    makeAdmin = true
+                    true
                 } else {
                     items.add("Remove Admin")
-                    makeAdmin = false
+                    false
                 }
 
                 // don't allow self messaging or self delete member
-                if (!profile.isSelfProfile) {
+                if (!profile!!.isSelfProfile) {
                     items.add("Delete member")
                     items.add("Message")
                 }
-
                 val cs = items.toTypedArray<CharSequence>()
-
                 val builder = AlertDialog.Builder(mContext!!)
                 //builder.setTitle("Select The Action");
                 builder.setItems(cs, DialogInterface.OnClickListener { dialog, item ->
                     //Delete member
                     if (item == 1) {
-                        val members = arrayOfNulls<String>(1)
-                        members[0] = mDataList!![position].address
-                        mProgressDialog.show()
-                        SampleAPI.editMembers(mUser!!.groupid, members, true, object : SampleAPI.ResponseHandler() {
+                        val members = arrayOf<String>(mDataList!![position]!!.address)
+                        mProgressDialog!!.show()
+                        editMembers(mUser!!.groupid, members, true, object : SampleAPI.ResponseHandler() {
                             override fun HandleAPIResponse(response: SampleAPI.Response?) {
-                                if (mProgressDialog.isShowing)
-                                    mProgressDialog.dismiss()
-
+                                if (mProgressDialog!!.isShowing) mProgressDialog!!.dismiss()
                                 if (null == response) {
                                     //TBD, show error
                                     return
                                 }
-
                                 if (response.result == "OK") {
                                     mDataList!!.removeAt(position)
                                     notifyItemRemoved(position)
                                     notifyDataSetChanged()
                                 }
-
                             }
                         })
-
                     } else if (item == 0) {
-                        mProgressDialog.show()
-                        SampleAPI.setAdmin(mUser!!.groupid, mDataList!![position].address, makeAdmin, object : SampleAPI.ResponseHandler() {
+                        mProgressDialog!!.show()
+                        setAdmin(mUser!!.groupid, mDataList!![position]!!.address, makeAdmin, object : SampleAPI.ResponseHandler() {
                             override fun HandleAPIResponse(response: SampleAPI.Response?) {
-                                if (mProgressDialog.isShowing)
-                                    mProgressDialog.dismiss()
-
+                                if (mProgressDialog!!.isShowing) mProgressDialog!!.dismiss()
                                 if (null == response) {
                                     //TBD, show error
                                     return
                                 }
-
                                 if (response.result == "OK") {
                                     parseGroupMembers(mUser!!.groupMembers)
                                 }
-
                             }
                         })
-
                     } else if (2 == item) {
-                        MesiboUI.launchMessageView(activity!!, profile.address, profile.groupid)
+                        MesiboUI.launchMessageView(activity, profile.address, profile.groupid)
                         activity!!.finish()
                         return@OnClickListener
                     }
                 })
                 builder.show()
             })
-
         }
-
 
         override fun getItemCount(): Int {
             return mDataList!!.size
         }
 
+        init {
+            mContext = context
+            mDataList = list
+        }
     }
 
     companion object {
-        private val MAX_THUMBNAIL_GALERY_SIZE = 35
-
-        private var mUser: Mesibo.UserProfile? = null
-        private val VIDEO_FILE = 2
-        private val IMAGE_FILE = 1
-        private val OTHER_FILE = 2
-
+        private const val MAX_THUMBNAIL_GALERY_SIZE = 35
+        private var mUser: UserProfile? = null
+        private const val VIDEO_FILE = 2
+        private const val IMAGE_FILE = 1
+        private const val OTHER_FILE = 2
         private var mDefaultProfileBmp: Bitmap? = null
 
         /**
@@ -712,26 +547,20 @@ class ShowProfileFragment : Fragment(), Mesibo.MessageListener, Mesibo.UserProfi
          * @return A new instance of fragment ShowProfileFragment.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(userdata: Mesibo.UserProfile): ShowProfileFragment {
+        fun newInstance(userdata: UserProfile?): ShowProfileFragment {
             val fragment = ShowProfileFragment()
             mUser = userdata
             return fragment
         }
 
-
-        fun isImageFile(path: String): Boolean {
+        fun isImageFile(path: String?): Boolean {
             val mimeType = URLConnection.guessContentTypeFromName(path)
             return mimeType != null && mimeType.startsWith("image")
         }
 
-
-        fun isVideoFile(path: String): Boolean {
+        fun isVideoFile(path: String?): Boolean {
             val mimeType = URLConnection.guessContentTypeFromName(path)
             return mimeType != null && mimeType.startsWith("video")
         }
     }
-}// Required empty public constructor
-
-private fun SampleAPI.editMembers(groupid: Long, members: Array<String?>, remove: Boolean, handler: SampleAPI.ResponseHandler) {
-    return
 }

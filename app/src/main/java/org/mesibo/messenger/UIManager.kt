@@ -34,99 +34,30 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
 import android.Manifest
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import android.webkit.MimeTypeMap
-import android.widget.Toast
-
-import com.mesibo.api.Mesibo
-import com.mesibo.calls.MesiboCall
 import com.mesibo.mediapicker.AlbumListData
 import com.mesibo.mediapicker.MediaPicker
-
-import org.mesibo.messenger.AppSettings.SettingsActivity
-
-import com.mesibo.uihelper.ILoginInterface
-import com.mesibo.uihelper.IProductTourListener
-import com.mesibo.uihelper.MesiboUiHelper
-import com.mesibo.uihelper.MesiboUiHelperConfig
-import com.mesibo.uihelper.WelcomeScreen
+import com.mesibo.mediapicker.MediaPicker.ImageEditorListener
 import com.mesibo.messaging.MesiboUI
-
-
-import java.util.ArrayList
-
-private var MesiboUiHelperConfig.mPermissionsRequestMessage: String
-    get() {return MesiboUiHelperConfig.mPermissionsRequestMessage}
-    set(s) {MesiboUiHelperConfig.mPermissionsRequestMessage = s}
-
-private var MesiboUiHelperConfig.mPermissionsDeniedMessage: String
-    get() {return MesiboUiHelperConfig.mPermissionsDeniedMessage}
-    set(s) {MesiboUiHelperConfig.mPermissionsDeniedMessage = s}
-
-private var MesiboUiHelperConfig.mPermissions: List<String>
-    get() {return  MesiboUiHelperConfig.mPermissions}
-    set(ls) {MesiboUiHelperConfig.mPermissions = ls}
-
-
-private var MesiboUiHelperConfig.mSmartLockUrl: String
-    get() {return MesiboUiHelperConfig.mSmartLockUrl}
-    set(s) {MesiboUiHelperConfig.mSmartLockUrl = s}
-
-private var MesiboUiHelperConfig.mScreenAnimation: Boolean
-    get() {return  MesiboUiHelperConfig.mScreenAnimation}
-    set(b) {MesiboUiHelperConfig.mScreenAnimation = b}
-
-private var MesiboUiHelperConfig.mSecondaryTextColor: Int
-    get() {return  MesiboUiHelperConfig.mSecondaryTextColor}
-    set(i) {MesiboUiHelperConfig.mSecondaryTextColor}
-
-private var MesiboUiHelperConfig.mButttonTextColor: Int
-    get() {return MesiboUiHelperConfig.mButttonTextColor}
-    set(i) { MesiboUiHelperConfig.mButttonTextColor = i}
-
-private var MesiboUiHelperConfig.mButttonColor: Int
-    get() {return MesiboUiHelperConfig.mButttonColor}
-    set(i) { MesiboUiHelperConfig.mButttonColor = i}
-
-private var MesiboUiHelperConfig.mPrimaryTextColor: Int
-    get() { return  MesiboUiHelperConfig.mPrimaryTextColor}
-    set(i) { MesiboUiHelperConfig.mPrimaryTextColor = i}
-
-private var MesiboUiHelperConfig.mBackgroundColor: Int
-    get() {return  MesiboUiHelperConfig.mBackgroundColor}
-    set(i) {MesiboUiHelperConfig.mBackgroundColor = i}
-
-private var MesiboUiHelperConfig.mWelcomeBackgroundColor: Int
-    get() {return  MesiboUiHelperConfig.mWelcomeBackgroundColor}
-    set(i) {MesiboUiHelperConfig.mWelcomeBackgroundColor = i}
-
-private var MesiboUiHelperConfig.mWelcomeBottomText: String
-    get() {return  MesiboUiHelperConfig.mWelcomeBottomText}
-    set(s) {MesiboUiHelperConfig.mWelcomeBottomText = s}
-
-private var MesiboUiHelperConfig.mScreens: List<WelcomeScreen>
-    get() {return  MesiboUiHelperConfig.mScreens}
-    set(res) {MesiboUiHelperConfig.mScreens = res}
+import com.mesibo.uihelper.*
+import org.mesibo.messenger.AppSettings.SettingsActivity
+import org.mesibo.messenger.MesiboListeners.Companion.instance
+import org.mesibo.messenger.StartUpActivity
+import java.util.*
 
 object UIManager {
-    var mMesiboLaunched = false
-
-    var mProductTourShown = false
-
     fun launchStartupActivity(context: Context, skipTour: Boolean) {
         val intent = Intent(context, StartUpActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -134,21 +65,17 @@ object UIManager {
         context.startActivity(intent)
     }
 
-    fun launchMesibo(context: Context, flag: Int, startInBackground: Boolean, keepRunningOnBackPressed: Boolean) {
+    var mMesiboLaunched = false
+    fun launchMesibo(context: Context?, flag: Int, startInBackground: Boolean, keepRunningOnBackPressed: Boolean) {
         mMesiboLaunched = true
         MesiboUI.launch(context, flag, startInBackground, keepRunningOnBackPressed)
     }
 
-    fun launchPagerActivty(context: Context) {
-
-        context.startActivity(Intent(context, MesiboMainActivity::class.java))
-    }
-
-    fun launchMesiboContacts(context: Context, forwardid: Long, selectionMode: Int, flag: Int, bundle: Bundle) {
+    fun launchMesiboContacts(context: Context?, forwardid: Long, selectionMode: Int, flag: Int, bundle: Bundle?) {
         MesiboUI.launchContacts(context, forwardid, selectionMode, flag, bundle)
     }
 
-    fun launchUserProfile(context: Context, groupid: Long, peer: String) {
+    fun launchUserProfile(context: Context, groupid: Long, peer: String?) {
         val subActivity = Intent(context, ShowProfileActivity::class.java)
         subActivity.putExtra("peer", peer).putExtra("groupid", groupid)
         context.startActivity(subActivity)
@@ -161,34 +88,30 @@ object UIManager {
 
     fun launchUserRegistration(context: Context, flag: Int) {
         val subActivity = Intent(context, EditProfileActivity::class.java)
-        if (flag > 0)
-            subActivity.flags = flag
+        if (flag > 0) subActivity.flags = flag
         context.startActivity(subActivity)
     }
 
-    fun launchImageViewer(context: Activity, filePath: String) {
+    fun launchImageViewer(context: Activity?, filePath: String?) {
         MediaPicker.launchImageViewer(context, filePath)
     }
 
-    fun launchImageViewer(context: Activity, files: ArrayList<String>, firstIndex: Int) {
+    fun launchImageViewer(context: Activity?, files: ArrayList<String?>?, firstIndex: Int) {
         MediaPicker.launchImageViewer(context, files, firstIndex)
     }
 
-    fun launchImageEditor(context: Context, type: Int, drawableid: Int, title: String, filePath: String, showEditControls: Boolean, showTitle: Boolean, showCropOverlay: Boolean, squareCrop: Boolean, maxDimension: Int, listener: MediaPicker.ImageEditorListener) {
-        MediaPicker.launchEditor(context as AppCompatActivity, type, drawableid, title, filePath, showEditControls, showTitle, showCropOverlay, squareCrop, maxDimension, listener)
+    fun launchImageEditor(context: Context?, type: Int, drawableid: Int, title: String?, filePath: String?, showEditControls: Boolean, showTitle: Boolean, showCropOverlay: Boolean, squareCrop: Boolean, maxDimension: Int, listener: ImageEditorListener?) {
+        MediaPicker.launchEditor(context as AppCompatActivity?, type, drawableid, title, filePath, showEditControls, showTitle, showCropOverlay, squareCrop, maxDimension, listener)
     }
 
-    fun launchAlbum(context: Activity, albumList: List<AlbumListData>) {
+    fun launchAlbum(context: Activity?, albumList: List<AlbumListData?>?) {
         MediaPicker.launchAlbum(context, albumList)
     }
 
-    fun launchWelcomeactivity(context: Activity, newtask: Boolean, loginInterface: ILoginInterface, tourListener: IProductTourListener) {
-
-
+    var mProductTourShown = false
+    fun launchWelcomeactivity(context: Activity?, newtask: Boolean, loginInterface: ILoginInterface?, tourListener: IProductTourListener?) {
         val config = MesiboUiHelperConfig()
-
-        val res = ArrayList<WelcomeScreen>()
-
+        val res: MutableList<WelcomeScreen> = ArrayList()
         res.add(WelcomeScreen("Messaging in your apps", "Over 79% of all apps require some form of communications. Mesibo is built from ground-up to power this!", 0, R.drawable.welcome, -0xff7975))
         res.add(WelcomeScreen("Messaging, Voice, & Video", "Complete infrastructure with powerful APIs to get you started, rightaway!", 0, R.drawable.videocall, -0xf062a8))
         //res.add(new WelcomeScreen("Plug & Play", "Not just APIs, you can even use pluggable UI modules - Buid in just a few hours", 0, R.drawable.profile, 0xfff4b400));
@@ -198,109 +121,50 @@ object UIManager {
 
         // dummy - requires
         res.add(WelcomeScreen("", ":", 0, R.drawable.welcome, -0xff7975))
-
-
-        config.mScreens = res
-        config.mWelcomeBottomText = "Mesibo will never share your information"
-        config.mWelcomeBackgroundColor = -0xff7975
-
-        config.mBackgroundColor = -0x1
-        config.mPrimaryTextColor = -0xe8d8d9
-        config.mButttonColor = -0xff7975
-        config.mButttonTextColor = -0x1
-        config.mSecondaryTextColor = -0x99999a
-
-        config.mScreenAnimation = true
-        config.mSmartLockUrl = "https://app.mesibo.com"
-
-        val permissions = ArrayList<String>()
-
+        MesiboUiHelperConfig.mScreens = res
+        MesiboUiHelperConfig.mWelcomeBottomText = "Mesibo will never share your information"
+        MesiboUiHelperConfig.mWelcomeBackgroundColor = -0xff7975
+        MesiboUiHelperConfig.mBackgroundColor = -0x1
+        MesiboUiHelperConfig.mPrimaryTextColor = -0xe8d8d9
+        MesiboUiHelperConfig.mButttonColor = -0xff7975
+        MesiboUiHelperConfig.mButttonTextColor = -0x1
+        MesiboUiHelperConfig.mSecondaryTextColor = -0x99999a
+        MesiboUiHelperConfig.mScreenAnimation = true
+        MesiboUiHelperConfig.mSmartLockUrl = "https://app.mesibo.com"
+        val permissions: MutableList<String> = ArrayList()
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         permissions.add(Manifest.permission.READ_CONTACTS)
-        config.mPermissions = permissions
-        config.mPermissionsRequestMessage = "Mesibo requires Storage and Contacts permissions so that you can send messages and make calls to your contacts. Please grant to continue!"
-        config.mPermissionsDeniedMessage = "Mesibo will close now since the required permissions were not granted"
-
-
+        MesiboUiHelperConfig.mPermissions = permissions
+        MesiboUiHelperConfig.mPermissionsRequestMessage = "Mesibo requires Storage and Contacts permissions so that you can send messages and make calls to your contacts. Please grant to continue!"
+        MesiboUiHelperConfig.mPermissionsDeniedMessage = "Mesibo will close now since the required permissions were not granted"
         MesiboUiHelper.setConfig(config)
-
         if (mMesiboLaunched) {
-            launchLogin(context, MesiboListeners.instance)
+            launchLogin(context, instance)
             return
         }
-
         mProductTourShown = true
         MesiboUiHelper.launchTour(context, newtask, tourListener)
     }
 
-    fun launchLogin(context: Activity, loginInterface: ILoginInterface) {
+    fun launchLogin(context: Activity?, loginInterface: ILoginInterface?) {
         MesiboUiHelper.launchLogin(context, true, 2, loginInterface)
     }
 
-    fun showOnCallProgressGreenBar(view: View) {
-        if (MesiboCall.getInstance().isCallInProgress) {
-
-            view.visibility = View.VISIBLE
-        } else {
-            view.visibility = View.GONE
-        }
-    }
-
-
     @JvmOverloads
-    fun showAlert(context: Context?, title: String, message: String, pl: DialogInterface.OnClickListener? = null, nl: DialogInterface.OnClickListener? = null) {
+    fun showAlert(context: Context?, title: String?, message: String?, pl: DialogInterface.OnClickListener? = null, nl: DialogInterface.OnClickListener? = null) {
         if (null == context) {
             return  //
         }
-        val dialog = android.support.v7.app.AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context)
         dialog.setTitle(title)
         dialog.setMessage(message)
         // dialog.setIcon(android.R.drawable.ic_dialog_alert);
         dialog.setCancelable(true)
-
         dialog.setPositiveButton(android.R.string.ok, pl)
         dialog.setNegativeButton(android.R.string.cancel, nl)
-
         try {
             dialog.show()
         } catch (e: Exception) {
-
-        }
-
-    }
-
-    fun openMedia(context: Context, fileUrl: String, filePath: String) {
-
-        val myMime = MimeTypeMap.getSingleton()
-        val newIntent = Intent(Intent.ACTION_VIEW)
-        val mimeType = myMime.getMimeTypeFromExtension(fileExt(fileUrl))
-        newIntent.setDataAndType(Mesibo.uriFromFile(context, filePath), mimeType)
-        newIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        try {
-            context.startActivity(newIntent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(context, "No App found for this type of file.", Toast.LENGTH_LONG).show()
-        }
-
-    }
-
-    fun fileExt(url: String): String? {
-        var url = url
-        if (url.indexOf("?") > -1) {
-            url = url.substring(0, url.indexOf("?"))
-        }
-        if (url.lastIndexOf(".") == -1) {
-            return null
-        } else {
-            var ext = url.substring(url.lastIndexOf(".") + 1)
-            if (ext.indexOf("%") > -1) {
-                ext = ext.substring(0, ext.indexOf("%"))
-            }
-            if (ext.indexOf("/") > -1) {
-                ext = ext.substring(0, ext.indexOf("/"))
-            }
-            return ext.toLowerCase()
-
         }
     }
 }

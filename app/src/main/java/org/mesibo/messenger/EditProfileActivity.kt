@@ -34,32 +34,24 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
-import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-
 import com.mesibo.api.Mesibo
 
-
 class EditProfileActivity : AppCompatActivity() {
-
-
-    internal var mRequestingFragment: Fragment? = null
+    var mRequestingFragment: Fragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_new_profile)
-
-
         val registerNewProfileFragment = EditProfileFragment()
         mRequestingFragment = registerNewProfileFragment
         val fm = supportFragmentManager
@@ -83,11 +75,8 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 1)
-            supportFragmentManager.popBackStackImmediate()
-
+        if (supportFragmentManager.backStackEntryCount > 1) supportFragmentManager.popBackStackImmediate()
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -101,21 +90,17 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         if (imm.isAcceptingText) {
-            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
-
         for (fragment in supportFragmentManager.fragments) {
-            if (fragment is EditProfileFragment && fragment.isVisible())
-                fragment.onActivityResult(requestCode, resultCode, data)
+            if (fragment is EditProfileFragment && fragment.isVisible()) fragment.onActivityResult(requestCode, resultCode, data)
         }
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (mRequestingFragment != null)
-            mRequestingFragment!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (mRequestingFragment != null) mRequestingFragment!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

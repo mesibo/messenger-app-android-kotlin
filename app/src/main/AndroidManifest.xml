@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -18,10 +19,10 @@
 
 
     <application
-        android:name="org.mesibo.messenger.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Kotlin Mesibo Messenger"
+        android:label="Mesibo Messenger"
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/AppTheme">
@@ -33,15 +34,15 @@
 
 
         <activity
-            android:name="org.mesibo.messenger.EditProfileActivity"
+            android:name=".EditProfileActivity"
             android:theme="@style/EditProfileTheme"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name="org.mesibo.messenger.ShowProfileActivity"
+        <activity android:name=".ShowProfileActivity"
             android:theme="@style/ShowUserProfileTheme"
             />
 
-        <activity android:name="org.mesibo.messenger.StartUpActivity"
+        <activity android:name=".StartUpActivity"
             android:theme="@style/ShowUserProfileTheme"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -55,56 +56,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-      <!--  <activity
-            android:name="org.mesibo.messenger.MessagingActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />-->
-
-        <activity
-            android:name="org.mesibo.messenger.MessagingActivityNew"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-
-        <activity android:name="org.mesibo.messenger.Contacts.ContactDetailsActivity"
-            android:theme="@style/SettingsTheme"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-
-        <activity android:name="org.mesibo.messenger.MesiboMainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-
-
-        <activity android:name="org.mesibo.messenger.LaunchContactsActivity" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-
-
-        </activity>
-
-
-
-
 
 
         <meta-data android:name="com.facebook.accountkit.ApplicationName"
@@ -121,75 +72,40 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="org.mesibo.messenger.AppSettings.SettingsActivity"
+            android:name=".AppSettings.SettingsActivity"
             android:theme="@style/SettingsTheme"
             android:windowSoftInputMode="adjustPan" />
 
-
-        <receiver android:name="org.mesibo.messenger.AutoStart">
+        <receiver android:name=".AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
                 <action android:name="org.mesibo.messenger.restart"></action>
             </intent-filter>
         </receiver>
 
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
-            <!--android:exported="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-                <!--<action android:name="com.google.android.c2dm.intent.REGISTRATION" />-->
-                <!--<category android:name="org.mesibo.messenger" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-
-        <!--<service-->
-            <!--android:name=".fcm.MesiboGcmListenerService"-->
-            <!--android:exported="false" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".fcm.MesiboInstanceIDListenerService"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.gms.iid.InstanceID" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".fcm.MesiboRegistrationIntentService"-->
-            <!--android:exported="false">-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".fcm.MesiboJobIntentService"-->
-            <!--android:exported="false"-->
-            <!--android:permission="android.permission.BIND_JOB_SERVICE"/>-->
-
-
-        <service
-            android:name="org.mesibo.messenger.fcm.MesiboGcmListenerService">
+        <!-- Firebase Notifications-->
+        <service android:name=".fcm.MesiboGcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name="org.mesibo.messenger.fcm.MesiboInstanceIDListenerService"
+
+        <service android:name=".fcm.MesiboInstanceIDListenerService"
             android:exported="false">
+
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="org.mesibo.messenger.fcm.MesiboRegistrationIntentService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-        </service>
-        <service
-            android:name="org.mesibo.messenger.fcm.MesiboJobIntentService"
+            android:name=".fcm.MesiboRegistrationIntentService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".fcm.MesiboJobIntentService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
     </application>
 

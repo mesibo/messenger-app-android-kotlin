@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/myPrimaryColor</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!-- this is to ensure to blank window appears when stating in background -->
@@ -110,45 +110,6 @@
         <item name="dialogPreferenceStyle">@style/Preference.DialogPreference</item>
         <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference</item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
-    </style>
-
-
-
-
-    <style name="chat_text_message_params">
-
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:textSize">@dimen/_15sdp</item>
-        <item name="android:textColor">@color/md_grey_300</item>
-
-    </style>
-    <style name="chat_timings_params">
-
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:gravity">bottom</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textColor">@color/grey</item>
-
-    </style>
-
-    <style name="chat_timings_params_outgoing">
-
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:gravity">bottom</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:textColor">@color/black_overlay_2</item>
-
     </style>
 
 </resources>

@@ -17,22 +17,19 @@
 <resources>
     <color name="window_background">#FFF5F5F5</color>
     <color name="myPrimaryColor">#ff00868b</color>
-    <color name="myPrimaryDarkColor">#007174</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="myPrimaryDarkColor">#1565c0</color>
     <color name="myPrimaryLightColor">#42a5f5</color>
     <color name="myAccentColor">#2196f3</color>
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#1565c0</color>
+    <color name="colorAccent">#2196f3</color>
     <color name="showMeessageBG">#80000000</color>
     <color name="overlaySelection">#40000000</color>
     <color name="dialogueBackground">#8f000000</color>
-    <color name="background_app">#ecf9f7f7</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="myWindowBackground">#FFFFFF</color>
     <color name="myTextPrimaryColor">#212121</color>
-    <color name="secondaryTextColor">#777777</color>
-    <color name="out_chat_bubble_color">#a7c9e4</color>
-    <color name="faded_blue">#bde3fa</color>
-    <color name="headercolor">#eddfa5</color>
     <!-- <color name="phone_verification_background">@color/gray</color> -->
 
 

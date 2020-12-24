@@ -34,15 +34,12 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
 package org.mesibo.messenger.AppSettings
 
-
-import android.content.Intent
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -52,103 +49,67 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-
 import com.mesibo.api.Mesibo
 import com.mesibo.api.MesiboUtils
 import com.mesibo.emojiview.EmojiconTextView
-import org.mesibo.messenger.BlockedSettingsFragment
 import org.mesibo.messenger.EditProfileFragment
-import org.mesibo.messenger.SampleAPI
-
 import org.mesibo.messenger.R
-
+import org.mesibo.messenger.SampleAPI.startLogout
 
 class BasicSettingsFragment : Fragment() {
-
-
     private var mUserName: EmojiconTextView? = null
     private var mUserStatus: EmojiconTextView? = null
     private var mUserImage: ImageView? = null
-    private var mUser: Mesibo.UserProfile? = Mesibo.getSelfProfile()
-
-
+    private var mUser = Mesibo.getSelfProfile()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_basic_settings, container, false)
-        val ab = (activity as AppCompatActivity).supportActionBar
+        val ab = (activity as AppCompatActivity?)!!.supportActionBar
         ab!!.setDisplayHomeAsUpEnabled(true)
         ab.title = "Settings"
-
         if (null == mUser) {
             activity!!.finish()
             //TBD show alert
             return v
         }
-
         mUserName = v.findViewById<View>(R.id.set_self_user_name) as EmojiconTextView
         mUserStatus = v.findViewById<View>(R.id.set_self_status) as EmojiconTextView
         mUserImage = v.findViewById<View>(R.id.set_user_image) as ImageView
-
-
         val profileLayout = v.findViewById<View>(R.id.set_picture_name_status_layout) as LinearLayout
         profileLayout.setOnClickListener {
             val RegFragment = EditProfileFragment()
-            (activity as SettingsActivity).setRequestingFragment(RegFragment)
+            (activity as SettingsActivity?)!!.setRequestingFragment(RegFragment)
             RegFragment.activateInSettingsMode()
-            val fm = (activity as AppCompatActivity).supportFragmentManager
+            val fm = (activity as AppCompatActivity?)!!.supportFragmentManager
             val ft = fm.beginTransaction()
             ft.replace(R.id.settings_fragment_place, RegFragment, "null")
             ft.addToBackStack("profile")
             ft.commit()
         }
-
         val DataUsageLayout = v.findViewById<View>(R.id.set_data_layout) as LinearLayout
         DataUsageLayout.setOnClickListener {
             val dataFragment = DataUsageFragment()
-            val fm = (activity as AppCompatActivity).supportFragmentManager
+            val fm = (activity as AppCompatActivity?)!!.supportFragmentManager
             val ft = fm.beginTransaction()
             ft.replace(R.id.settings_fragment_place, dataFragment, "null")
             ft.addToBackStack("datausage")
             ft.commit()
         }
-
-
-        val BlockedUserLayout = v.findViewById<View>(R.id.set_blocked_layout) as LinearLayout
-        BlockedUserLayout.setOnClickListener {
-            val dataFragment = BlockedSettingsFragment()
-            val fm = (activity as AppCompatActivity).supportFragmentManager
-            val ft = fm.beginTransaction()
-            ft.replace(R.id.settings_fragment_place, dataFragment, "null")
-            ft.addToBackStack("blocked")
-            ft.commit()
-        }
-
         val aboutLayout = v.findViewById<View>(R.id.set_about_layout) as LinearLayout
         aboutLayout.setOnClickListener {
             val aboutFragment = AboutFragment()
-            val fm = (activity as AppCompatActivity).supportFragmentManager
+            val fm = (activity as AppCompatActivity?)!!.supportFragmentManager
             val ft = fm.beginTransaction()
             ft.replace(R.id.settings_fragment_place, aboutFragment, "null")
             ft.addToBackStack("about")
             ft.commit()
         }
-
-        val privacyPolicy = v.findViewById<View>(R.id.privacy_policy_layout) as LinearLayout
-        privacyPolicy.setOnClickListener {
-            val url = "https://mesibo.com/terms-of-use/"
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(url)
-            startActivity(i)
-        }
-
         val logoutLayout = v.findViewById<View>(R.id.set_logout_layout) as LinearLayout
         logoutLayout.setOnClickListener {
-            SampleAPI.startLogout()
+            startLogout()
             activity!!.finish()
         }
-
-
         return v
     }
 
@@ -164,20 +125,17 @@ class BasicSettingsFragment : Fragment() {
         val imagePath = Mesibo.getUserProfilePicturePath(mUser, Mesibo.FileInfo.TYPE_AUTO)
         if (null != imagePath) {
             val b = BitmapFactory.decodeFile(imagePath)
-            if (null != b)
-                mUserImage!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(b))
+            if (null != b) mUserImage!!.setImageDrawable(MesiboUtils.getRoundImageDrawable(b))
         }
-
-        if (!TextUtils.isEmpty(mUser!!.name)) {
-            mUserName!!.text = mUser!!.name
+        if (!TextUtils.isEmpty(mUser.name)) {
+            mUserName!!.text = mUser.name
         } else {
             mUserName!!.text = ""
         }
-
-        if (!TextUtils.isEmpty(mUser!!.status)) {
-            mUserStatus!!.text = mUser!!.status
+        if (!TextUtils.isEmpty(mUser.status)) {
+            mUserStatus!!.text = mUser.status
         } else {
             mUserStatus!!.text = ""
         }
     }
-}// Required empty public constructor
+}

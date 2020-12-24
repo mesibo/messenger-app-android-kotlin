@@ -34,10 +34,9 @@
  * https://mesibo.com/documentation/
  *
  * Source Code Repository
- * https://github.com/mesibo/messengerKotlin-app-android
+ * https://github.com/mesibo/messenger-app-android
  *
  */
-
 package org.mesibo.messenger
 
 import android.content.Context
@@ -46,25 +45,21 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
-
 import com.mesibo.contactutils.ContactUtils
 import com.mesibo.uihelper.MesiboUiHelperConfig
+import org.mesibo.messenger.MesiboListeners.Companion.instance
+import org.mesibo.messenger.SampleAPI.token
 
 class StartUpActivity : AppCompatActivity() {
     private var mRunInBackground = false
     private val mPermissionAlert = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (intent.getBooleanExtra(INTENTEXIT, false)) {
             Log.d(TAG, "onCreate closing")
             finish()
             return
         }
-
-
-
         mRunInBackground = intent.getBooleanExtra(STARTINBACKGROUND, false)
         if (mRunInBackground) {
             Log.e(TAG, "Moving app to background")
@@ -72,34 +67,26 @@ class StartUpActivity : AppCompatActivity() {
         } else {
             Log.e(TAG, "Not Moving app to background")
         }
-
-
         setContentView(R.layout.activity_blank_launcher)
         startNextActivity()
     }
 
-    internal fun startNextActivity() {
-
-        if (TextUtils.isEmpty(SampleAPI.token)) {
+    fun startNextActivity() {
+        if (TextUtils.isEmpty(token)) {
             MesiboUiHelperConfig.mDefaultCountry = ContactUtils.getCountryCode()
             MesiboUiHelperConfig.mPhoneVerificationBottomText = "Note, Mesibo may call instead of sending an SMS if SMS delivery to your phone fails."
             if (null == MesiboUiHelperConfig.mDefaultCountry) {
                 MesiboUiHelperConfig.mDefaultCountry = "91"
             }
-
             if (intent.getBooleanExtra(SKIPTOUR, false)) {
-                UIManager.launchLogin(this, MesiboListeners.instance)
+                UIManager.launchLogin(this, instance)
             } else {
-                UIManager.launchWelcomeactivity(this, true, MesiboListeners.instance, MesiboListeners.instance)
+                UIManager.launchWelcomeactivity(this, true, instance, instance)
             }
-
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
         } else {
-            //UIManager.launchMesibo(this, 0, mRunInBackground, true);
-            UIManager.launchPagerActivty(this)
+            UIManager.launchMesibo(this, 0, mRunInBackground, true)
         }
-
         finish()
     }
 
@@ -109,24 +96,20 @@ class StartUpActivity : AppCompatActivity() {
         if (intent.getBooleanExtra(INTENTEXIT, false)) {
             finish()
         }
-
         super.onNewIntent(intent)
     }
 
     companion object {
-
-        private val TAG = "MesiboStartupActivity"
-        val INTENTEXIT = "exit"
-        val SKIPTOUR = "skipTour"
-        val STARTINBACKGROUND = "startinbackground"
-
+        private const val TAG = "MesiboStartupActivity"
+        const val INTENTEXIT = "exit"
+        const val SKIPTOUR = "skipTour"
+        const val STARTINBACKGROUND = "startinbackground"
         fun newInstance(context: Context, startInBackground: Boolean) {
-            val i = Intent(context, StartUpActivity::class.java)  //MyActivity can be anything which you want to start on bootup...
+            val i = Intent(context, StartUpActivity::class.java) //MyActivity can be anything which you want to start on bootup...
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             //i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            i.putExtra(StartUpActivity.STARTINBACKGROUND, startInBackground)
-
+            i.putExtra(STARTINBACKGROUND, startInBackground)
             context.startActivity(i)
         }
     }
