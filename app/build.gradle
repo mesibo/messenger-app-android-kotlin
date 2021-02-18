@@ -78,6 +78,7 @@ dependencies {
     implementation "com.mesibo.api:uihelper:${project.MesiboVersion_UiHelper}"
     implementation "com.mesibo.api:mesibo:${project.MesiboVersion_Api}"
     implementation "com.mesibo.api:ui:${project.MesiboVersion_Ui}"
+    implementation "com.mesibo.api:calls:${project.MesiboVersion_Calls}"
     implementation "com.mesibo.api:callui:${project.MesiboVersion_CallUi}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

@@ -52,6 +52,7 @@ import android.view.Menu
 import android.view.View
 import com.google.gson.Gson
 import com.mesibo.api.Mesibo.*
+import com.mesibo.calls.api.MesiboCall
 import com.mesibo.calls.api.MesiboCall.CallProperties
 import com.mesibo.calls.ui.MesiboCallUi
 import com.mesibo.contactutils.ContactUtils
@@ -91,7 +92,7 @@ import org.mesibo.messenger.fcm.MesiboRegistrationIntentService.GCMListener
 import org.webrtc.ContextUtils.getApplicationContext
 import java.util.*
 
-class MesiboListeners : ConnectionListener, ILoginInterface, IProductTourListener, MessageListener, UIHelperListner, UserProfileLookupListener, ContactsListener, MessageFilter, CrashListener, GCMListener, MesiboCallUi.Listener {
+class MesiboListeners : ConnectionListener, ILoginInterface, IProductTourListener, MessageListener, UIHelperListner, UserProfileLookupListener, ContactsListener, MessageFilter, CrashListener, GCMListener, MesiboCall.IncomingListener {
     class MesiboNotification internal constructor() {
         var subject: String? = null
         var msg: String? = null
@@ -253,10 +254,10 @@ class MesiboListeners : ConnectionListener, ILoginInterface, IProductTourListene
             if (params != null) {
                 if (R.id.action_call === item && 0L == params.groupid) {
                     //UIManager.launchCallActivity(MainApplication.getAppContext(), params.peer, true);
-                    if (!MesiboCallUi.callUi(context, params.profile.address, false)) MesiboCallUi.callUiForExistingCall(context)
+                    if (!MesiboCall.getInstance().callUi(context, params.profile.address, false)) MesiboCall.getInstance().callUiForExistingCall(context)
                 } else if (R.id.action_videocall === item && 0L == params.groupid) {
                     //UIManager.launchCallActivity(MainApplication.getAppContext(), params.peer, true);
-                    if (!MesiboCallUi.callUi(context, params.profile.address, true)) MesiboCallUi.callUiForExistingCall(context)
+                    if (!MesiboCall.getInstance().callUi(context, params.profile.address, true)) MesiboCall.getInstance().callUiForExistingCall(context)
                 }
             }
         }
@@ -319,15 +320,21 @@ class MesiboListeners : ConnectionListener, ILoginInterface, IProductTourListene
         return false
     }
 
-    override fun MesiboCallUi_OnConfig(callProperties: CallProperties): CallProperties {
-        return callProperties
+    override fun MesiboCall_OnError(p0: CallProperties?, p1: Int) {
     }
 
-    override fun MesiboCallUi_OnError(callProperties: CallProperties, i: Int): Boolean {
+    override fun MesiboCall_OnIncoming(profile: UserProfile?, video: Boolean): CallProperties {
+        var cp:MesiboCall.CallProperties = MesiboCall.getInstance().createCallProperties(video)
+        cp.parent = MainApplication.getAppContext()
+        cp.user = profile
+        return cp
+    }
+
+    override fun MesiboCall_OnShowUserInterface(p0: MesiboCall.Call?, p1: CallProperties?): Boolean {
         return false
     }
 
-    override fun MesiboCallUi_onNotify(type: Int, profile: UserProfile, video: Boolean): Boolean {
+    override fun MesiboCall_onNotify(p0: Int, p1: UserProfile?, p2: Boolean): Boolean {
         return false
     }
 

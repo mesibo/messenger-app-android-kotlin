@@ -92,7 +92,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         if (imm.isAcceptingText) {
-            imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
         for (fragment in supportFragmentManager.fragments) {
             if (fragment is EditProfileFragment && fragment.isVisible()) fragment.onActivityResult(requestCode, resultCode, data)

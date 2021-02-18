@@ -44,7 +44,7 @@ class MesiboGcmListenerService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "FcmListenerService"
-        fun getToken(context: Context): String {
+        fun getToken(context: Context): String? {
             return context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty")
         }
     }

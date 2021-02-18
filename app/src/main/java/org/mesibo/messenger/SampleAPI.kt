@@ -51,6 +51,7 @@ import android.util.Base64
 import com.google.gson.Gson
 import com.mesibo.api.Mesibo
 import com.mesibo.api.Mesibo.*
+import com.mesibo.calls.api.MesiboCall
 import com.mesibo.calls.ui.MesiboCallUi
 import com.mesibo.contactutils.ContactUtils
 import com.mesibo.mediapicker.MediaPicker
@@ -398,7 +399,7 @@ object SampleAPI {
 
         // add lister
         Mesibo.addListener(instance)
-        MesiboCallUi.getInstance().listener = instance
+        MesiboCall.getInstance().setListener(instance)
 
         // add file transfer handler
         val fileTransferHelper = MesiboFileTransferHelper()
@@ -631,7 +632,7 @@ object SampleAPI {
         // if call is in progress, we must give notification even if reading because user is in call
         // screen
         var message = message
-        if (!MesiboCallUi.getInstance().isCallInProgress && Mesibo.isReading(params)) return
+        if (!MesiboCall.getInstance().isCallInProgress && Mesibo.isReading(params)) return
         if (Mesibo.ORIGIN_REALTIME != params.origin || Mesibo.MSGSTATUS_OUTBOX == params.status) return
 
         //MUST not happen for realtime message

@@ -2,9 +2,10 @@
   <library name="Gradle: com.mesibo.api:webrtc:1.0.5@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/19878b522f0b62987f5308fe0109b8ae/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b695cdc1cbb6954e912a8bca7991e265/webrtc-1.0.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b695cdc1cbb6954e912a8bca7991e265/webrtc-1.0.5/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b695cdc1cbb6954e912a8bca7991e265/webrtc-1.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5841c4fa436c8bb32cce71a885e40957/webrtc-1.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5841c4fa436c8bb32cce71a885e40957/webrtc-1.0.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5841c4fa436c8bb32cce71a885e40957/webrtc-1.0.5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

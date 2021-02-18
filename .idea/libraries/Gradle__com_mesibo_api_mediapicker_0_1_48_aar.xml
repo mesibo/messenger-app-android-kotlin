@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.mesibo.api:mediapicker:0.1.48@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d58c0044965f9b741103b98845c052e/mediapicker-0.1.48/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d58c0044965f9b741103b98845c052e/mediapicker-0.1.48/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9d58c0044965f9b741103b98845c052e/mediapicker-0.1.48/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eb33f161ad5e0742145b0829f9702e3b/mediapicker-0.1.48/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eb33f161ad5e0742145b0829f9702e3b/mediapicker-0.1.48/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eb33f161ad5e0742145b0829f9702e3b/mediapicker-0.1.48/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/mediapicker/0.1.48/f8cf21f5128845781d95d74030cc687aaa2e46fc/mediapicker-0.1.48-javadoc.jar!/" />

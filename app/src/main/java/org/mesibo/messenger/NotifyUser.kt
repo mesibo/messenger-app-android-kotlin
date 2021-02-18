@@ -71,7 +71,8 @@ class NotifyUser(context: Context) {
     private var mPackageName: String? = null
     private var mTimerTask: TimerTask? = null
     private var mTimer: Timer? = null
-    private val mUiHandler: Handler = Handler(MainApplication.getAppContext()?.getMainLooper())
+    private val mUiHandler: Handler? = Handler(MainApplication.getAppContext()?.getMainLooper()!!)
+
     private fun createNotificationChannel(id: String, name: String, important: Int) {
         if (Build.VERSION.SDK_INT < 26) {
             return
@@ -210,7 +211,7 @@ class NotifyUser(context: Context) {
         mTimer = Timer()
         mTimerTask = object : TimerTask() {
             override fun run() {
-                mUiHandler.post(mNotifyRunnable)
+                mUiHandler?.post(mNotifyRunnable)
             }
         }
         mTimer!!.schedule(mTimerTask, 1000)

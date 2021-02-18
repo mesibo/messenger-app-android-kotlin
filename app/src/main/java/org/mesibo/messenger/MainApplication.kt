@@ -44,6 +44,7 @@ import android.content.Context
 import android.util.Log
 import com.mesibo.api.Mesibo
 import com.mesibo.api.Mesibo.RestartListener
+import com.mesibo.calls.api.MesiboCall
 import com.mesibo.calls.ui.MesiboCallUi
 import com.mesibo.mediapicker.MediaPicker
 import com.mesibo.messaging.MesiboUI
@@ -57,7 +58,7 @@ class MainApplication : Application(), RestartListener {
         mConfig = AppConfig(this)
         init(applicationContext)
         mCall = MesiboCallUi.getInstance()
-        mCall!!.init(this)
+        MesiboCall.getInstance().init(applicationContext)
         val opt = MesiboUI.getConfig()
         opt.mToolbarColor = -0xff7975
         opt.emptyUserListMessage = "Ask your family and friends to download so that you can try out Mesibo functionalities"

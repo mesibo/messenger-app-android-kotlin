@@ -3,8 +3,9 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/da540dc7e99a679994bb2deb3e5a781d/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3101ec41b5b5fb664c76b4447af72677/support-vector-drawable-28.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3101ec41b5b5fb664c76b4447af72677/support-vector-drawable-28.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3101ec41b5b5fb664c76b4447af72677/support-vector-drawable-28.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e6c515a53fe5d61b74c5418f035558d7/support-vector-drawable-28.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e6c515a53fe5d61b74c5418f035558d7/support-vector-drawable-28.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e6c515a53fe5d61b74c5418f035558d7/support-vector-drawable-28.0.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

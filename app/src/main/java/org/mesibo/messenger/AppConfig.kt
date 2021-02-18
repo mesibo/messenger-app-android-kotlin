@@ -126,7 +126,7 @@ class AppConfig(c: Context) {
         }
     }
 
-    fun getStringValue(key: String?, defaultVal: String): String {
+    fun getStringValue(key: String?, defaultVal: String): String? {
         return try {
             synchronized(mSharedPref!!) {
                 return if (mSharedPref!!.contains(key)) mSharedPref!!.getString(key, defaultVal) else defaultVal

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mesibo.api:ui:1.2.70@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fc8034ad664e3c943dd8bf2f64679cc/ui-1.2.70/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fc8034ad664e3c943dd8bf2f64679cc/ui-1.2.70/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fc8034ad664e3c943dd8bf2f64679cc/ui-1.2.70/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/ui/1.2.70/93ba93ef0f25ab1d6e28583851270f9ff2ee8e31/ui-1.2.70-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mesibo.api/ui/1.2.70/93ba93ef0f25ab1d6e28583851270f9ff2ee8e31/ui-1.2.70-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
