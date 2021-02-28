@@ -163,7 +163,9 @@ object SampleAPI {
     }
 
     private fun parseResponse(response: Response?, request: Bundle?, context: Context?, uiThread: Boolean): Boolean {
-        if (null == response) {
+        if (null == response || null == response.result) {
+            if(null== request) return false;
+
             if (request!!.getString("op").equals("getcontacts", ignoreCase = true)) {
                 mSyncPending = true
             }
@@ -173,8 +175,12 @@ object SampleAPI {
             return false
         }
         if (!response.result.equals("OK", ignoreCase = true)) {
-            if (response.error.equals("AUTHFAIL", ignoreCase = true)) {
+            if (null != response.error && response.error.equals("AUTHFAIL", ignoreCase = true)) {
                 forceLogout()
+            }
+
+            if(null != response.errmsg) {
+                UIManager.showAlert(context, response.errtitle, response.errmsg)
             }
             return false
         }
@@ -871,6 +877,8 @@ object SampleAPI {
         var result: String? = null
         var op: String? = null
         var error: String? = null
+        var errmsg: String? = null
+        var errtitle: String? = null
         var token: String? = null
         var contacts: Array<Contacts>? = null
         var name: String? = null
