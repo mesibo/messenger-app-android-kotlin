@@ -399,7 +399,7 @@ object SampleAPI {
         MesiboRegistrationIntentService.startRegistration(mContext, FCM_SENDER_ID, instance)
 
         // set path for storing DB and messaging files
-        Mesibo.setPath(Environment.getExternalStorageDirectory().absolutePath)
+        //Mesibo.setPath(Environment.getExternalStorageDirectory().absolutePath)
         val path = Mesibo.getBasePath()
         MediaPicker.setPath(path)
 
