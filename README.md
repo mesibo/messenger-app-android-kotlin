@@ -1,6 +1,6 @@
 ## Mesibo Messenger for Android - Kotlin 
 Note: 
-- This is an old verion. We have updated Java version and we will soon update Kotline version. Visit here for Java version [https://github.com/mesibo/messenger-app-android](https://github.com/mesibo/messenger-app-android)
+- This is an old verion. We have updated Java version and we will soon update Kotlin version. Visit here for Java version [https://github.com/mesibo/messenger-app-android](https://github.com/mesibo/messenger-app-android)
 - This kotlin version is created by converting java code using Android Studio
 - If this is the first time you are using kotlin in your project, Android Studio might display a warning that Kotlin is not configured in the project. Configure Kotlin by clicking Configure either in the upper right corner of the editor or in the event log alert that pops up in the lower-right corner. Refer to the official documentation [here](https://developer.android.com/kotlin/add-kotlin#add)
 
