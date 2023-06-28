@@ -15,22 +15,23 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
 
     <application
         android:name=".MainApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="Mesibo Messenger"
         android:supportsRtl="true"
         android:testOnly="false"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
 
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/GOOGLE_MAP_KEY" />
+            android:value="GOOGLE_MAP_KEY" />
 
 
         <activity
@@ -49,6 +50,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:noHistory="true"
             android:launchMode="singleTop"
+	    android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,14 +59,8 @@
             </intent-filter>
         </activity>
 
-
-        <meta-data android:name="com.facebook.accountkit.ApplicationName"
-            android:value="@string/app_name" />
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/FACEBOOK_APP_ID" />
-        <meta-data android:name="com.facebook.accountkit.ClientToken"
-            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
-
 
 
         <meta-data
@@ -76,7 +72,9 @@
             android:theme="@style/SettingsTheme"
             android:windowSoftInputMode="adjustPan" />
 
-        <receiver android:name=".AutoStart">
+        <receiver android:name=".AutoStart"
+		android:exported="true" 
+	    >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
                 <action android:name="org.mesibo.messenger.restart"></action>
@@ -84,7 +82,9 @@
         </receiver>
 
         <!-- Firebase Notifications-->
-        <service android:name=".fcm.MesiboGcmListenerService">
+        <service android:name=".fcm.MesiboGcmListenerService" 
+		android:exported="false" 
+		>
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

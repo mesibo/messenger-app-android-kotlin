@@ -32,6 +32,19 @@
     </style>
 
 
+    <style name="EditProfileTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/myPrimaryColor</item>
+        <item name="colorPrimaryDark">@color/myPrimaryDarkColor</item>
+        <item name="colorAccent">@color/myAccentColor</item>
+        <item name="android:textColorPrimary">@color/myTextPrimaryColor</item>
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
     <declare-styleable name="CheckBoxPreference"><attr format="string" name="summaryOn"/><attr name="android:summaryOn"/><attr format="string" name="summaryOff"/><attr name="android:summaryOff"/><attr format="boolean" name="disableDependentsState"/><attr name="android:disableDependentsState"/></declare-styleable>
     <declare-styleable name="DialogPreference"><attr format="string" name="dialogTitle"/><attr name="android:dialogTitle"/><attr format="string" name="dialogMessage"/><attr name="android:dialogMessage"/><attr format="reference" name="dialogIcon"/><attr name="android:dialogIcon"/><attr format="string" name="positiveButtonText"/><attr name="android:positiveButtonText"/><attr format="string" name="negativeButtonText"/><attr name="android:negativeButtonText"/><attr format="reference" name="dialogLayout"/><attr name="android:dialogLayout"/></declare-styleable>
     <declare-styleable name="ListPreference"><attr format="reference" name="entries"/><attr name="android:entries"/><attr format="reference" name="entryValues"/><attr name="android:entryValues"/></declare-styleable>

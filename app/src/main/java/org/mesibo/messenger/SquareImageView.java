@@ -1,4 +1,4 @@
-/** Copyright (c) 2021 Mesibo
+/** Copyright (c) 2019 Mesibo
  * https://mesibo.com
  * All rights reserved.
  *
@@ -37,39 +37,33 @@
  * https://github.com/mesibo/messenger-app-android
  *
  */
-package org.mesibo.messenger.Utils;
+
+package org.mesibo.messenger;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.util.AttributeSet;
+import android.widget.ImageView;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
+public class SquareImageView extends ImageView {
 
-public class AppUtils {
-
-
-    public static boolean aquireUserPermission(Context context, final String permission, int REQUEST_CODE) {
-        if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity)context,
-                    permission)) {
-
-            } else {
-                ActivityCompat.requestPermissions((AppCompatActivity)context,
-                        new String[]{permission},
-                        REQUEST_CODE);
-            }
-
-            return false;
-        }
-
-        return true;
-
+    public SquareImageView(Context context) {
+        super(context);
     }
 
+    public SquareImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
+    public SquareImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+
+        int width = getMeasuredWidth();
+        setMeasuredDimension(width, width);
+
+    }
 }

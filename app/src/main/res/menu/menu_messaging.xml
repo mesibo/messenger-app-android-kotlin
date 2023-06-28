@@ -25,4 +25,11 @@
         android:title="Call"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_e2e"
+        android:icon="@drawable/ic_security_white"
+        android:visible="true"
+        android:title="Encryption"
+        app:showAsAction="collapseActionView" />
+
 </menu>

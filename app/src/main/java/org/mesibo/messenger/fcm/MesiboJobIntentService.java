@@ -1,4 +1,4 @@
-/** Copyright (c) 2021 Mesibo
+/** Copyright (c) 2019 Mesibo
  * https://mesibo.com
  * All rights reserved.
  *
@@ -37,39 +37,53 @@
  * https://github.com/mesibo/messenger-app-android
  *
  */
-package org.mesibo.messenger.Utils;
 
+package org.mesibo.messenger.fcm;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.os.Handler;
+import androidx.core.app.JobIntentService;
+import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
+/**
+ * Require WAKE_LOCK persmission for API level earlier than Android O
+ */
 
-public class AppUtils {
+public class MesiboJobIntentService extends JobIntentService {
+    static final int JOB_ID = 1000;
 
+    /**
+     * Convenience method for enqueuing work in to this service.
+     */
+    static void enqueueWork(Context context, Intent work) {
+        try {
+        enqueueWork(context, MesiboJobIntentService.class, JOB_ID, work);
+        } catch (Exception e) {
 
-    public static boolean aquireUserPermission(Context context, final String permission, int REQUEST_CODE) {
-        if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity)context,
-                    permission)) {
-
-            } else {
-                ActivityCompat.requestPermissions((AppCompatActivity)context,
-                        new String[]{permission},
-                        REQUEST_CODE);
-            }
-
-            return false;
         }
-
-        return true;
-
     }
 
+    @Override
+    protected void onHandleWork(Intent intent) {
+        try {
+        MesiboRegistrationIntentService.sendMessageToListener( true);
+        } catch (Exception e) {
 
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    final Handler mHandler = new Handler();
+    // Helper for showing tests
+    void toast(final CharSequence text) {
+        mHandler.post(new Runnable() {
+            @Override public void run() {
+                Toast.makeText(MesiboJobIntentService.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

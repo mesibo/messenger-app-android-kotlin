@@ -1,4 +1,6 @@
-/** Copyright (c) 2021 Mesibo
+package org.mesibo.messenger;
+
+/** Copyright (c) 2023 Mesibo
  * https://mesibo.com
  * All rights reserved.
  *
@@ -37,39 +39,22 @@
  * https://github.com/mesibo/messenger-app-android
  *
  */
-package org.mesibo.messenger.Utils;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
+import com.mesibo.api.Mesibo;
 
-public class AppUtils {
-
-
-    public static boolean aquireUserPermission(Context context, final String permission, int REQUEST_CODE) {
-        if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity)context,
-                    permission)) {
-
-            } else {
-                ActivityCompat.requestPermissions((AppCompatActivity)context,
-                        new String[]{permission},
-                        REQUEST_CODE);
-            }
-
-            return false;
+public class AutoStart extends BroadcastReceiver
+{
+    //Alarm alarm = new Alarm();
+    @Override
+    public void onReceive(Context context, Intent intent)
+    {
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) ||
+                intent.getAction().equals(MainApplication.getRestartIntent())) {
+            StartUpActivity.newInstance(context, true);
         }
-
-        return true;
-
     }
-
-
-
 }

@@ -6,12 +6,13 @@
         android:title="Media auto-download">
 
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Auto Download"
             android:summary="Auto download media files while on cellular data. Auto download is always enabled for WiFi."
             android:key="auto"
             android:defaultValue="true"
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            android:textColor="@color/black"
+            ></androidx.preference.SwitchPreferenceCompat>
 
     </PreferenceCategory>
 
@@ -23,31 +24,31 @@
         >
 
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Photos"
             android:key="cell_photo"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Videos"
             android:key="cell_video"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Audio"
             android:key="cell_audio"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Documents"
             android:key="cell_doc"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
 
 
@@ -61,31 +62,31 @@
         >
 
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Photos"
             android:key="wifi_photo"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Videos"
             android:key="wifi_video"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Audio"
             android:key="wifi_audio"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Documents"
             android:key="wifi_doc"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
 
 
@@ -100,31 +101,31 @@
 
 
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Photos"
             android:key="roam_photo"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Videos"
             android:key="roam_video"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
-        <android.support.v7.preference.SwitchPreferenceCompat
+            ></androidx.preference.SwitchPreferenceCompat>
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Audio"
             android:key="roam_audio"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:title="Documents"
             android:key="roam_doc"
             android:defaultValue="false"
 
-            ></android.support.v7.preference.SwitchPreferenceCompat>
+            ></androidx.preference.SwitchPreferenceCompat>
 
 
 

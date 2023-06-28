@@ -1,4 +1,4 @@
-/** Copyright (c) 2021 Mesibo
+/** Copyright (c) 2019 Mesibo
  * https://mesibo.com
  * All rights reserved.
  *
@@ -37,39 +37,60 @@
  * https://github.com/mesibo/messenger-app-android
  *
  */
-package org.mesibo.messenger.Utils;
 
+package org.mesibo.messenger;
+
+import android.app.Application;
+import androidx.lifecycle.LifecycleObserver;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
+import com.mesibo.api.Mesibo;
+import com.mesibo.calls.api.MesiboCall;
+import com.mesibo.mediapicker.ImagePicker;
+import com.mesibo.mediapicker.MediaPicker;
+import com.mesibo.calls.ui.MesiboCallUi;
+import com.mesibo.messaging.MesiboUI;
+import com.mesibo.messaging.MesiboUiDefaults;
 
-public class AppUtils {
+public class MainApplication extends Application implements Mesibo.RestartListener, LifecycleObserver {
+    public static final String TAG = "MesiboDemoApplication";
+    private static Context mContext = null;
+    private static MesiboCallUi mCallUi = null;
+    private static AppConfig mConfig = null;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = getApplicationContext();
+        Mesibo.setRestartListener(this);
+        mConfig = new AppConfig(this);
+        SampleAPI.init(getApplicationContext());
 
-    public static boolean aquireUserPermission(Context context, final String permission, int REQUEST_CODE) {
-        if (ContextCompat.checkSelfPermission(context, permission)
-                != PackageManager.PERMISSION_GRANTED) {
+        mCallUi = MesiboCallUi.getInstance();
+        MesiboCall.getInstance().init(mContext);
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity)context,
-                    permission)) {
-
-            } else {
-                ActivityCompat.requestPermissions((AppCompatActivity)context,
-                        new String[]{permission},
-                        REQUEST_CODE);
-            }
-
-            return false;
-        }
-
-        return true;
+        MesiboUiDefaults opt = MesiboUI.getUiDefaults();
+        opt.mToolbarColor = 0xff00868b;
+        opt.emptyUserListMessage = "No messages! Click on the message icon above to start messaging!";
+        MediaPicker.setToolbarColor(opt.mToolbarColor);
+        ImagePicker.getInstance().setApp(this);
 
     }
 
+    public static String getRestartIntent() {
+        return "com.mesibo.sampleapp.restart";
+    }
 
+    public static Context getAppContext() {
+        return mContext;
+    }
+
+    @Override
+    public void Mesibo_onRestart() {
+        Log.d(TAG, "OnRestart");
+        StartUpActivity.newInstance(this, true);
+    }
 
 }
+
