@@ -52,6 +52,11 @@ public class UIListener implements MesiboUIListener {
         return false;
     }
 
+    @Override
+    public boolean MesiboUI_onClickedRow(MesiboUI.MesiboScreen screen, MesiboUI.MesiboRow row) {
+        return false;
+    }
+
     void userListScreenMenuHandler(Context context, int item) {
         if (item == R.id.action_settings) {
             UIManager.launchUserSettings(context);
@@ -109,6 +114,19 @@ public class UIListener implements MesiboUIListener {
 
     void initMessageListScreen(MesiboUI.MesiboMessageScreen screen) {
         ((Activity)screen.parent).getMenuInflater().inflate(R.menu.menu_messaging, screen.menu);
+
+        /* different item for group calls */
+        if(null != screen.profile && screen.profile.isGroup()) {
+            MenuItem menuItem = screen.menu.findItem(R.id.action_call);
+            if(!screen.profile.isActive()) menuItem.setVisible(false);
+            menuItem.setIcon(R.drawable.ic_mesibo_groupcall_audio);
+            // MenuItemCompat.setShowAsAction(menuItem, MenuItemCompat.SHOW_AS_ACTION_NEVER);
+
+            menuItem = screen.menu.findItem(R.id.action_videocall);
+            menuItem.setIcon(R.drawable.ic_mesibo_groupcall_video);
+            if(!screen.profile.isActive()) menuItem.setVisible(false);
+            //MenuItemCompat.setShowAsAction(menuItem, MenuItemCompat.SHOW_AS_ACTION_NEVER);
+        }
 
         MenuItem.OnMenuItemClickListener menuhandler = new MenuItem.OnMenuItemClickListener() {
             @Override

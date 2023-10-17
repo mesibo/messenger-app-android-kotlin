@@ -48,7 +48,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.mesibo.contactutils.ContactUtils;
 import com.mesibo.messaging.MesiboUI;
 import com.mesibo.uihelper.MesiboUiHelperConfig;
 
@@ -99,11 +98,9 @@ public class StartUpActivity extends AppCompatActivity {
     void startNextActivity() {
 
         if(TextUtils.isEmpty(SampleAPI.getToken())) {
-            MesiboUiHelperConfig.mDefaultCountry = ContactUtils.getCountryCode();
+            MesiboUiHelperConfig.mDefaultCountry = 1;
             MesiboUiHelperConfig.mPhoneVerificationBottomText = "Note, Mesibo may call instead of sending an SMS if SMS delivery to your phone fails.";
-            if(null == MesiboUiHelperConfig.mDefaultCountry) {
-                MesiboUiHelperConfig.mDefaultCountry = "91";
-            }
+
 
             if(getIntent().getBooleanExtra(SKIPTOUR, false)) {
                 UIManager.launchLogin(this, MesiboListeners.getInstance());

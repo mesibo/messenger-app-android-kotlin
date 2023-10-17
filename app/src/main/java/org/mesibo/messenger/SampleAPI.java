@@ -51,10 +51,9 @@ import com.google.gson.Gson;
 import com.mesibo.api.Mesibo;
 import com.mesibo.api.MesiboHttp;
 import com.mesibo.api.MesiboMessage;
-import com.mesibo.api.MesiboMessageProperties;
+import com.mesibo.api.MesiboPhoneContactsManager;
 import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
-import com.mesibo.contactutils.ContactUtils;
 import com.mesibo.mediapicker.MediaPicker;
 import org.mesibo.messenger.fcm.MesiboRegistrationIntentService;
 import com.mesibo.messaging.MesiboUI;
@@ -256,13 +255,6 @@ public class SampleAPI  {
         return http.sendRequest(postBunlde, filePath, formFieldName);
     }
 
-    public static String phoneBookLookup(String phone) {
-        if(TextUtils.isEmpty(phone))
-            return null;
-
-        return  ContactUtils.reverseLookup(phone);
-    }
-
     public static void updateDeletedGroup(long gid) {
         if(0 == gid) return;
         MesiboProfile u = Mesibo.getProfile(gid);
@@ -419,16 +411,9 @@ public class SampleAPI  {
     }
 
     public static void startContactsSync() {
-        String synced = Mesibo.readKey(KEY_SYNCEDCONTACTS);
-        String syncedts = Mesibo.readKey(KEY_SYNCEDDEVICECONTACTSTIME);
-        long ts = 0;
-        if(!TextUtils.isEmpty(syncedts)) {
-            try {
-                ts = Long.parseLong(syncedts);
-            } catch (Exception e) {}
-        }
-
-        ContactUtils.sync(synced, ts, true, MesiboListeners.getInstance());
+        MesiboPhoneContactsManager contacts = Mesibo.getPhoneContactsManager();
+        contacts.overrideProfileName(true);
+        contacts.start();
     }
 
     public static boolean startMesibo(boolean resetContacts) {
@@ -476,14 +461,12 @@ public class SampleAPI  {
             return false;
         }
 
-        String ts = Mesibo.readKey(KEY_SYNCEDCONTACTSTIME);
+        MesiboPhoneContactsManager contactsManager = Mesibo.getPhoneContactsManager();
+        contactsManager.overrideProfileName(true);
 
-        ContactUtils.init(mContext);
-        int cc = Mesibo.getCountryCodeFromPhone(AppConfig.getConfig().phone);
-        ContactUtils.setCountryCode(String.valueOf(cc));
-
-        if(resetContacts)
-            ContactUtils.syncReset();
+        if(resetContacts) {
+            Mesibo.getPhoneContactsManager().reset();
+        }
 
         Intent restartIntent = new Intent(MainApplication.getRestartIntent());
 
@@ -498,10 +481,10 @@ public class SampleAPI  {
         SampleAPI.saveLocalSyncedContacts("", 0);
         SampleAPI.saveSyncedTimestamp(0);
         Mesibo.stop(true);
+        Mesibo.getPhoneContactsManager().reset();
         AppConfig.getConfig().reset();
         mNotifyUser.clearNotification();
         Mesibo.reset();
-        ContactUtils.syncReset();
 
         UIManager.launchStartupActivity(mContext, true);
     }

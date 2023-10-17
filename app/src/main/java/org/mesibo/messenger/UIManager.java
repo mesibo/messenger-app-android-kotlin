@@ -52,7 +52,7 @@ import com.mesibo.mediapicker.AlbumListData;
 import com.mesibo.mediapicker.MediaPicker;
 
 import org.mesibo.messenger.AppSettings.SettingsActivity;
-import com.mesibo.uihelper.ILoginInterface;
+import com.mesibo.uihelper.MesiboLoginUiHelperListener;
 import com.mesibo.uihelper.IProductTourListener;
 import com.mesibo.uihelper.MesiboUiHelper;
 import com.mesibo.uihelper.MesiboUiHelperConfig;
@@ -142,7 +142,6 @@ public class UIManager {
         config.mSecondaryTextColor = 0xff666666;
 
         config.mScreenAnimation = true;
-        config.mSmartLockUrl = null; //"https://mesibo.com/sampleapp/";
 
         List<String> permissions = new ArrayList<>();
 
@@ -159,7 +158,7 @@ public class UIManager {
         MesiboUiHelper.setConfig(config);
     }
 
-    public static void launchWelcomeactivity(Activity context, boolean newtask, ILoginInterface loginInterface, IProductTourListener tourListener){
+    public static void launchWelcomeactivity(Activity context, boolean newtask, MesiboLoginUiHelperListener loginInterface, IProductTourListener tourListener){
 
         initUiHelper();
 
@@ -175,7 +174,7 @@ public class UIManager {
         MesiboUiHelper.launchTour(context, newtask, tourListener);
     }
 
-    public static void launchLogin(Activity context, ILoginInterface loginInterface){
+    public static void launchLogin(Activity context, MesiboLoginUiHelperListener loginInterface){
         initUiHelper();
         MesiboUiHelper.launchLogin(context, true, 2, loginInterface);
     }

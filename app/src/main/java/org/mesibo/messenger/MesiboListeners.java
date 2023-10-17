@@ -59,21 +59,20 @@ import com.mesibo.api.MesiboMessage;
 import com.mesibo.api.MesiboProfile;
 import com.mesibo.calls.api.MesiboCall;
 import com.mesibo.calls.ui.MesiboCallUi;
-import com.mesibo.contactutils.*;
 
 import com.mesibo.api.Mesibo;
 import org.mesibo.messenger.fcm.MesiboRegistrationIntentService;
 
 import com.mesibo.messaging.MesiboUI;
 import com.mesibo.uihelper.WelcomeScreen;
-import com.mesibo.uihelper.ILoginInterface;
+import com.mesibo.uihelper.MesiboLoginUiHelperListener;
 import com.mesibo.uihelper.IProductTourListener;
-import com.mesibo.uihelper.ILoginResultsInterface;
+import com.mesibo.uihelper.MesiboLoginUiHelperResultCallback;
 
 import java.util.ArrayList;
 import static org.webrtc.ContextUtils.getApplicationContext;
 
-public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterface, IProductTourListener, Mesibo.MessageListener, ContactUtils.ContactsListener, Mesibo.MessageFilter, Mesibo.ProfileListener, Mesibo.CrashListener, MesiboRegistrationIntentService.GCMListener, MesiboCall.IncomingListener, Mesibo.GroupListener, Mesibo.AppStateListener, Mesibo.EndToEndEncryptionListener {
+public class MesiboListeners implements Mesibo.ConnectionListener, MesiboLoginUiHelperListener, IProductTourListener, Mesibo.MessageListener, Mesibo.MessageFilter, Mesibo.ProfileListener, Mesibo.CrashListener, MesiboRegistrationIntentService.GCMListener, MesiboCall.IncomingListener, Mesibo.GroupListener, Mesibo.AppStateListener, Mesibo.EndToEndEncryptionListener {
     public static final String TAG = "MesiboListeners";
     public static Context mLoginContext = null;
     private static Gson mGson = new Gson();
@@ -95,13 +94,11 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
         }
     }
 
-    ILoginResultsInterface mILoginResultsInterface = null;
+    MesiboLoginUiHelperResultCallback mMesiboLoginUiHelperResultCallback = null;
     Handler mGroupHandler = null;
     String mCode = null;
     String mPhone = null;
     boolean mSyncDone = false;
-    Context mUserListContext = null;
-    Context mMessageContext = null;
     Context mLastContext = null;
 
     @SuppressWarnings("all")
@@ -125,8 +122,8 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
                     }
                 }
 
-                if(null != mILoginResultsInterface && null == response.errmsg)
-                    mILoginResultsInterface.onLoginResult(response.result.equals("OK"), -1);
+                if(null != mMesiboLoginUiHelperResultCallback && null == response.errmsg)
+                    mMesiboLoginUiHelperResultCallback.onLoginResult(response.result.equals("OK"), -1);
 
             } else if (response.op.equals("setgroup")) {
 
@@ -156,10 +153,10 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
     public void Mesibo_onConnectionStatus(int status) {
         Log.d(TAG, "Mesibo_onConnectionStatus: " + status);
         if (Mesibo.STATUS_SIGNOUT == status) {
-            UIManager.showAlert(mUserListContext, "Signed Out", "You have signed-in from other device and hence signed out here");
+            UIManager.showAlert(mLastContext, "Signed Out", "You have signed-in from other device and hence signed out here");
             SampleAPI.forceLogout();
         } else if (Mesibo.STATUS_AUTHFAIL == status) {
-            UIManager.showAlert(mUserListContext, "Signed Out", "Login Expired. Login again to continue.");
+            UIManager.showAlert(mLastContext, "Signed Out", "Login Expired. Login again to continue.");
             SampleAPI.forceLogout();
         }
 
@@ -220,34 +217,7 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
 
     @Override
     public boolean Mesibo_onGetProfile(MesiboProfile profile) {
-        if(null == profile) {
-            return false;
-        }
-
-        if(!profile.isActive()) {
-            if(profile.groupid > 0) {
-                profile.lookedup = true; //else getProfile will be recursive call
-                //SampleAPI.updateDeletedGroup(profile.groupid);
-                return true;
-            }
-        }
-
-        if(profile.groupid > 0) {
-            return true;
-        }
-
-        if(!TextUtils.isEmpty(profile.address)) {
-            long ts = Mesibo.getTimestamp();
-            String name = ContactUtils.reverseLookup(profile.address);
-            if(null == name) {
-                return mSyncDone;
-            }
-
-            profile.setOverrideName(name);
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     //Note this is not in UI thread
@@ -262,7 +232,7 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
     }
 
     @Override
-    public MesiboCall.CallProperties MesiboCall_OnIncoming(MesiboProfile userProfile, boolean video) {
+    public MesiboCall.CallProperties MesiboCall_OnIncoming(MesiboProfile userProfile, boolean video, boolean waiting) {
         MesiboCall.CallProperties cc = MesiboCall.getInstance().createCallProperties(video);
         cc.parent = getApplicationContext();
         cc.user = userProfile;
@@ -292,7 +262,6 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
             message = "You missed a mesibo " + (video?"video ":"") + "call from " + profile.getNameOrAddress("+");
 
         }
-
 
         return true;
     }
@@ -385,14 +354,24 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
     }
 
     @Override
-    public boolean onLogin(Context context, String phone, String code, ILoginResultsInterface iLoginResultsInterface) {
+    public boolean MesiboLoginUiHelper_onLogin(Context context, String phone, String code, MesiboLoginUiHelperResultCallback MesiboLoginUiHelperResultCallback) {
         mLoginContext = context;
-        mILoginResultsInterface = iLoginResultsInterface;
+        mMesiboLoginUiHelperResultCallback = MesiboLoginUiHelperResultCallback;
         mCode = code;
         mPhone = phone;
         mHandler.setContext(context);
         SampleAPI.login(phone, code, mHandler);
         return false;
+    }
+
+    @Override
+    public int MesiboLoginUiHelper_getCountryCode(Context context) {
+        return 0;
+    }
+
+    @Override
+    public boolean MesiboLoginUiHelper_isPhoneValid(Context context, String s) {
+        return true;
     }
 
     private static MesiboListeners _instance = null;
@@ -406,38 +385,6 @@ public class MesiboListeners implements Mesibo.ConnectionListener, ILoginInterfa
 
         return _instance;
     }
-
-
-    private static ArrayList<String> mContactsToSync = new ArrayList<String>();
-    private static ArrayList<String> mDeletedContacts = new ArrayList<String>();
-    private long mSyncTs = 0;
-    @Override
-    public boolean ContactUtils_onContact(String[] phoneNumbers, boolean deleted, String contacts, long ts) {
-        mSyncDone = true;
-        Mesibo.updateLookups();
-        if(null == phoneNumbers) return true;
-
-        int maxcount = 100; // we are limiting count to conserve memory
-        String[] phones = new String[maxcount];
-        for(int i=0; i < phoneNumbers.length; ) {
-            if((phoneNumbers.length - i) < maxcount) {
-                maxcount = (phoneNumbers.length - i);
-                phones = new String[maxcount];
-            }
-
-            for(int j=0; j < maxcount; j++)
-                phones[j] = phoneNumbers[i++];
-
-
-            Mesibo.syncContacts(phones, !deleted, true, 0, false);
-        }
-
-        if(phoneNumbers.length > 0)  Mesibo.syncContacts();
-
-        if(!deleted)  SampleAPI.saveLocalSyncedContacts(contacts, ts);
-        return true;
-    }
-
 
     @Override
     public void Mesibo_onGCMToken(String token) {
