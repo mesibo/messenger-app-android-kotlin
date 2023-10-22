@@ -1,18 +1,26 @@
-/**
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/******************************************************************************
+* By accessing or copying this work, you agree to comply with the following   *
+* terms:                                                                      *
+*                                                                             *
+* Copyright (c) 2019-2023 mesibo                                              *
+* https://mesibo.com                                                          *
+* All rights reserved.                                                        *
+*                                                                             *
+* Redistribution is not permitted. Use of this software is subject to the     *
+* conditions specified at https://mesibo.com . When using the source code,    *
+* maintain the copyright notice, conditions, disclaimer, and  links to mesibo * 
+* website, documentation and the source code repository.                      *
+*                                                                             *
+* Do not use the name of mesibo or its contributors to endorse products from  *
+* this software without prior written permission.                             *
+*                                                                             *
+* This software is provided "as is" without warranties. mesibo and its        *
+* contributors are not liable for any damages arising from its use.           *
+*                                                                             *
+* Documentation: https://mesibo.com/documentation/                            *
+*                                                                             *
+* Source Code Repository: https://github.com/mesibo/                          *
+*******************************************************************************/
 
 package org.mesibo.messenger.fcm;
 
