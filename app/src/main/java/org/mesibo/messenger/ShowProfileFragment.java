@@ -52,6 +52,7 @@ import android.widget.TextView;
 import com.mesibo.api.Mesibo;
 import com.mesibo.api.MesiboGroupProfile;
 import com.mesibo.api.MesiboMessage;
+import com.mesibo.api.MesiboPhoneContact;
 import com.mesibo.api.MesiboProfile;
 import com.mesibo.api.MesiboReadSession;
 import com.mesibo.emojiview.EmojiconTextView;
@@ -551,9 +552,18 @@ public class ShowProfileFragment extends Fragment implements Mesibo.MessageListe
                 mStatus.setText(mUser.getStatus());
             }
 
+            MesiboPhoneContact c = Mesibo.getPhoneContactsManager().getPhoneNumberInfo(mUser.address, true);
             mStatusTime.setText((""));
-            mMobileNumber.setText((mUser.address));
-            mPhoneType.setText("Mobile");
+            mMobileNumber.setText(c.formattedPhoneNumber);
+            String type = "Phone";
+            if(c.type == MesiboPhoneContact.PHONETYPE_MOBILE)
+                type = "Mobile";
+            else if(c.type == MesiboPhoneContact.PHONETYPE_FIXED)
+                type = "Fixed";
+            else if(c.type == MesiboPhoneContact.PHONETYPE_TOLLFREE)
+                type = "Toll Free";
+
+            mPhoneType.setText(type);
         }
 
     }
